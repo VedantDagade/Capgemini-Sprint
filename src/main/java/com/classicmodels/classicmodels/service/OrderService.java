@@ -1,76 +1,104 @@
 package com.classicmodels.classicmodels.service;
 
+import com.classicmodels.classicmodels.dto.OrderDTO;
+import com.classicmodels.classicmodels.dto.OrderDetailDTO;
+import com.classicmodels.classicmodels.entity.Customer;
 import com.classicmodels.classicmodels.entity.Order;
-import com.classicmodels.classicmodels.entity.OrderDetail;
 import com.classicmodels.classicmodels.exception.ResourceNotFoundException;
+import com.classicmodels.classicmodels.mapper.EntityMapper;
+import com.classicmodels.classicmodels.repository.CustomerRepository;
 import com.classicmodels.classicmodels.repository.OrderDetailRepository;
 import com.classicmodels.classicmodels.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final CustomerRepository customerRepository;
+    private final EntityMapper mapper;
 
-    // GET all orders
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderDTO> getAllOrders() {
+        return orderRepository.findAll()
+                .stream()
+                .map(mapper::toOrderDTO)
+                .toList();
     }
 
-    // GET one order by ID
-    public Order getOrderById(Integer id) {
-        return orderRepository.findById(id)
+    public OrderDTO getOrderById(Integer id) {
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Order not found with id: " + id));
+        return mapper.toOrderDTO(order);
     }
 
-    // CREATE new order
-    public Order createOrder(Order order) {
+    public OrderDTO createOrder(Order order) {
         if (orderRepository.existsById(order.getOrderNumber())) {
             throw new RuntimeException(
                     "Order already exists with number: " + order.getOrderNumber());
         }
-        return orderRepository.save(order);
+        return mapper.toOrderDTO(orderRepository.save(order));
     }
 
-    // UPDATE existing order
-    public Order updateOrder(Integer id, Order updatedOrder) {
-        Order existing = getOrderById(id);
+    public OrderDTO updateOrder(Integer id, Order updatedOrder) {
+        Order existing = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Order not found with id: " + id));
 
         existing.setOrderDate(updatedOrder.getOrderDate());
         existing.setRequiredDate(updatedOrder.getRequiredDate());
         existing.setShippedDate(updatedOrder.getShippedDate());
         existing.setStatus(updatedOrder.getStatus());
         existing.setComments(updatedOrder.getComments());
-        existing.setCustomerNumber(updatedOrder.getCustomerNumber());
 
-        return orderRepository.save(existing);
+        if (updatedOrder.getCustomer() != null
+                && updatedOrder.getCustomer().getCustomerNumber() != null) {
+            Customer customer = customerRepository
+                    .findById(updatedOrder.getCustomer().getCustomerNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Customer not found with id: "
+                                    + updatedOrder.getCustomer().getCustomerNumber()));
+            existing.setCustomer(customer);
+        }
+
+        return mapper.toOrderDTO(orderRepository.save(existing));
     }
 
-    // DELETE order
     public void deleteOrder(Integer id) {
-        Order existing = getOrderById(id);
+        Order existing = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Order not found with id: " + id));
         orderRepository.delete(existing);
     }
 
-    // FILTER by status
-    public List<Order> getOrdersByStatus(String status) {
-        return orderRepository.findByStatus(status);
+    public List<OrderDTO> getOrdersByStatus(String status) {
+        return orderRepository.findByStatus(status)
+                .stream()
+                .map(mapper::toOrderDTO)
+                .toList();
     }
 
-    // GET orders by customer
-    public List<Order> getOrdersByCustomer(Integer customerId) {
-        return orderRepository.findByCustomerNumber(customerId);
+    public List<OrderDTO> getOrdersByCustomer(Integer customerId) {
+        return orderRepository.findByCustomer_CustomerNumber(customerId)
+                .stream()
+                .map(mapper::toOrderDTO)
+                .toList();
     }
 
-    // GET all details for an order
-    public List<OrderDetail> getOrderDetails(Integer orderId) {
-        // Verify the order exists first
-        getOrderById(orderId);
-        return orderDetailRepository.findByIdOrderNumber(orderId);
+    public List<OrderDetailDTO> getOrderDetails(Integer orderId) {
+        orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Order not found with id: " + orderId));
+        return orderDetailRepository.findByIdOrderNumber(orderId)
+                .stream()
+                .map(mapper::toOrderDetailDTO)
+                .toList();
     }
 }

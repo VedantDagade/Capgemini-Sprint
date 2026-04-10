@@ -1,82 +1,108 @@
 package com.classicmodels.classicmodels.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
+import com.classicmodels.classicmodels.dto.EmployeeDTO;
 import com.classicmodels.classicmodels.entity.Employee;
+import com.classicmodels.classicmodels.entity.Office;
 import com.classicmodels.classicmodels.exception.ResourceNotFoundException;
+import com.classicmodels.classicmodels.mapper.EntityMapper;
 import com.classicmodels.classicmodels.repository.EmployeeRepository;
-
+import com.classicmodels.classicmodels.repository.OfficeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional  // THIS is what was missing
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final OfficeRepository officeRepository;
+    private final EntityMapper mapper;
 
-    // GET all employees
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public List<EmployeeDTO> getAllEmployees() {
+        return employeeRepository.findAll()
+                .stream()
+                .map(mapper::toEmployeeDTO)
+                .toList();
     }
 
-    // GET one employee by ID
-    public Employee getEmployeeById(Integer id) {
-        return employeeRepository.findById(id)
+    public EmployeeDTO getEmployeeById(Integer id) {
+        Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Employee not found with id: " + id));
+        return mapper.toEmployeeDTO(employee);
     }
 
-    // CREATE new employee
-    public Employee createEmployee(Employee employee) {
+    public EmployeeDTO createEmployee(Employee employee) {
         if (employeeRepository.existsById(employee.getEmployeeNumber())) {
             throw new RuntimeException(
-                    "Employee already exists with number: "
-                            + employee.getEmployeeNumber());
+                    "Employee already exists with number: " + employee.getEmployeeNumber());
         }
-        return employeeRepository.save(employee);
+        return mapper.toEmployeeDTO(employeeRepository.save(employee));
     }
 
-    // UPDATE existing employee
-    public Employee updateEmployee(Integer id, Employee updatedEmployee) {
-        Employee existing = getEmployeeById(id);
+    public EmployeeDTO updateEmployee(Integer id, Employee updatedEmployee) {
+        Employee existing = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Employee not found with id: " + id));
 
         existing.setLastName(updatedEmployee.getLastName());
         existing.setFirstName(updatedEmployee.getFirstName());
         existing.setExtension(updatedEmployee.getExtension());
         existing.setEmail(updatedEmployee.getEmail());
-        existing.setOfficeCode(updatedEmployee.getOfficeCode());
-        existing.setReportsTo(updatedEmployee.getReportsTo());
         existing.setJobTitle(updatedEmployee.getJobTitle());
 
-        return employeeRepository.save(existing);
+        if (updatedEmployee.getOffice() != null
+                && updatedEmployee.getOffice().getOfficeCode() != null) {
+            Office office = officeRepository
+                    .findById(updatedEmployee.getOffice().getOfficeCode())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Office not found with code: "
+                                    + updatedEmployee.getOffice().getOfficeCode()));
+            existing.setOffice(office);
+        }
+
+        if (updatedEmployee.getManager() != null
+                && updatedEmployee.getManager().getEmployeeNumber() != null) {
+            Employee manager = employeeRepository
+                    .findById(updatedEmployee.getManager().getEmployeeNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Manager not found with id: "
+                                    + updatedEmployee.getManager().getEmployeeNumber()));
+            existing.setManager(manager);
+        } else {
+            existing.setManager(null);
+        }
+
+        return mapper.toEmployeeDTO(employeeRepository.save(existing));
     }
 
-    // DELETE employee
     public void deleteEmployee(Integer id) {
-        Employee existing = getEmployeeById(id);
+        Employee existing = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Employee not found with id: " + id));
         employeeRepository.delete(existing);
     }
 
-    // SEARCH by last name
-    public List<Employee> searchByLastName(String lastName) {
-        return employeeRepository
-                .findByLastNameContainingIgnoreCase(lastName);
+    public List<EmployeeDTO> searchByLastName(String lastName) {
+        return employeeRepository.findByLastNameContainingIgnoreCase(lastName)
+                .stream().map(mapper::toEmployeeDTO).toList();
     }
 
-    // FILTER by job title
-    public List<Employee> getByJobTitle(String jobTitle) {
-        return employeeRepository.findByJobTitle(jobTitle);
+    public List<EmployeeDTO> getByJobTitle(String jobTitle) {
+        return employeeRepository.findByJobTitle(jobTitle)
+                .stream().map(mapper::toEmployeeDTO).toList();
     }
 
-    // FILTER by office code
-    public List<Employee> getByOfficeCode(String officeCode) {
-        return employeeRepository.findByOfficeCode(officeCode);
+    public List<EmployeeDTO> getByOfficeCode(String officeCode) {
+        return employeeRepository.findByOffice_OfficeCode(officeCode)
+                .stream().map(mapper::toEmployeeDTO).toList();
     }
 
-    // GET employees by manager
-    public List<Employee> getByReportsTo(Integer reportsTo) {
-        return employeeRepository.findByReportsTo(reportsTo);
+    public List<EmployeeDTO> getByManager(Integer managerEmployeeNumber) {
+        return employeeRepository.findByManager_EmployeeNumber(managerEmployeeNumber)
+                .stream().map(mapper::toEmployeeDTO).toList();
     }
 }

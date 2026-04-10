@@ -1,15 +1,16 @@
 package com.classicmodels.classicmodels.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "offices")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude = {"employees"})
+@EqualsAndHashCode(of = "officeCode")
 public class Office {
 
     @Id
@@ -39,4 +40,8 @@ public class Office {
 
     @Column(name = "territory", nullable = false)
     private String territory;
+
+    // One office → many employees
+    @OneToMany(mappedBy = "office", fetch = FetchType.LAZY)
+    private List<Employee> employees = new ArrayList<>();
 }

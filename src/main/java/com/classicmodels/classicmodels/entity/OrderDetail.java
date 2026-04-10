@@ -1,16 +1,15 @@
 package com.classicmodels.classicmodels.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "orderdetails")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude = {"order", "product"})
+@EqualsAndHashCode(of = "id")
 public class OrderDetail {
 
     @EmbeddedId
@@ -24,4 +23,16 @@ public class OrderDetail {
 
     @Column(name = "orderLineNumber", nullable = false)
     private Short orderLineNumber;
+
+    // Many order details → one order
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("orderNumber")
+    @JoinColumn(name = "orderNumber")
+    private Order order;
+
+    // Many order details → one product
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("productCode")
+    @JoinColumn(name = "productCode")
+    private Product product;
 }

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, PaymentId> {
 
-    // Payments by customer number
-    List<Payment> findByIdCustomerNumber(Integer customerNumber);
+    // changed: was findByIdCustomerNumber(Integer)
+    List<Payment> findByCustomer_CustomerNumber(Integer customerNumber);
 }

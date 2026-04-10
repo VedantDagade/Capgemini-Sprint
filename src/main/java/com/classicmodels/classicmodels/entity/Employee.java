@@ -1,18 +1,16 @@
 package com.classicmodels.classicmodels.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude = {"office", "manager", "subordinates", "customers"})
+@EqualsAndHashCode(of = "employeeNumber")
 public class Employee {
 
     @Id
@@ -31,12 +29,24 @@ public class Employee {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "officeCode", nullable = false)
-    private String officeCode;
-
-    @Column(name = "reportsTo")
-    private Integer reportsTo;
-
     @Column(name = "jobTitle", nullable = false)
     private String jobTitle;
+
+    // Many employees → one office
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "officeCode", nullable = false)
+    private Office office;
+
+    // Self-referential: many employees → one manager
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reportsTo")
+    private Employee manager;
+
+    // Self-referential: one manager → many subordinates
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+    private List<Employee> subordinates = new ArrayList<>();
+
+    // One sales rep → many customers
+    @OneToMany(mappedBy = "salesRep", fetch = FetchType.LAZY)
+    private List<Customer> customers = new ArrayList<>();
 }

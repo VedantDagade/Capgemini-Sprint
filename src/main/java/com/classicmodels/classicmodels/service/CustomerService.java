@@ -1,47 +1,54 @@
 package com.classicmodels.classicmodels.service;
 
+import com.classicmodels.classicmodels.dto.CustomerDTO;
 import com.classicmodels.classicmodels.entity.Customer;
+import com.classicmodels.classicmodels.entity.Employee;
 import com.classicmodels.classicmodels.exception.ResourceNotFoundException;
+import com.classicmodels.classicmodels.mapper.EntityMapper;
 import com.classicmodels.classicmodels.repository.CustomerRepository;
+import com.classicmodels.classicmodels.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final EmployeeRepository employeeRepository;
+    private final EntityMapper mapper;
 
-    // GET all customers
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepository.findAll()
+                .stream()
+                .map(mapper::toCustomerDTO)
+                .toList();
     }
 
-    // GET one customer by ID
-    public Customer getCustomerById(Integer id) {
-        return customerRepository.findById(id)
+    public CustomerDTO getCustomerById(Integer id) {
+        Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Customer not found with id: " + id));
+        return mapper.toCustomerDTO(customer);
     }
 
-    // CREATE new customer
-    public Customer createCustomer(Customer customer) {
-        // Check if customerNumber already exists
+    public CustomerDTO createCustomer(Customer customer) {
         if (customerRepository.existsById(customer.getCustomerNumber())) {
             throw new RuntimeException(
-                    "Customer already exists with number: "
-                            + customer.getCustomerNumber());
+                    "Customer already exists with number: " + customer.getCustomerNumber());
         }
-        return customerRepository.save(customer);
+        return mapper.toCustomerDTO(customerRepository.save(customer));
     }
 
-    // UPDATE existing customer
-    public Customer updateCustomer(Integer id, Customer updatedCustomer) {
-        // First check customer exists
-        Customer existing = getCustomerById(id);
+    public CustomerDTO updateCustomer(Integer id, Customer updatedCustomer) {
+        Customer existing = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found with id: " + id));
 
-        // Update only the fields
         existing.setCustomerName(updatedCustomer.getCustomerName());
         existing.setContactFirstName(updatedCustomer.getContactFirstName());
         existing.setContactLastName(updatedCustomer.getContactLastName());
@@ -52,32 +59,42 @@ public class CustomerService {
         existing.setState(updatedCustomer.getState());
         existing.setPostalCode(updatedCustomer.getPostalCode());
         existing.setCountry(updatedCustomer.getCountry());
-        existing.setSalesRepEmployeeNumber(
-                updatedCustomer.getSalesRepEmployeeNumber());
         existing.setCreditLimit(updatedCustomer.getCreditLimit());
 
-        return customerRepository.save(existing);
+        if (updatedCustomer.getSalesRep() != null
+                && updatedCustomer.getSalesRep().getEmployeeNumber() != null) {
+            Employee salesRep = employeeRepository
+                    .findById(updatedCustomer.getSalesRep().getEmployeeNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Employee not found with id: "
+                                    + updatedCustomer.getSalesRep().getEmployeeNumber()));
+            existing.setSalesRep(salesRep);
+        } else {
+            existing.setSalesRep(null);
+        }
+
+        return mapper.toCustomerDTO(customerRepository.save(existing));
     }
 
-    // DELETE customer
     public void deleteCustomer(Integer id) {
-        Customer existing = getCustomerById(id);
+        Customer existing = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found with id: " + id));
         customerRepository.delete(existing);
     }
 
-    // SEARCH by name
-    public List<Customer> searchByName(String name) {
-        return customerRepository
-                .findByCustomerNameContainingIgnoreCase(name);
+    public List<CustomerDTO> searchByName(String name) {
+        return customerRepository.findByCustomerNameContainingIgnoreCase(name)
+                .stream().map(mapper::toCustomerDTO).toList();
     }
 
-    // FILTER by country
-    public List<Customer> getByCountry(String country) {
-        return customerRepository.findByCountry(country);
+    public List<CustomerDTO> getByCountry(String country) {
+        return customerRepository.findByCountry(country)
+                .stream().map(mapper::toCustomerDTO).toList();
     }
 
-    // FILTER by city
-    public List<Customer> getByCity(String city) {
-        return customerRepository.findByCity(city);
+    public List<CustomerDTO> getByCity(String city) {
+        return customerRepository.findByCity(city)
+                .stream().map(mapper::toCustomerDTO).toList();
     }
 }

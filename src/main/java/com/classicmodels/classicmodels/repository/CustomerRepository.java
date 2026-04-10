@@ -8,15 +8,9 @@ import java.util.List;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-    // Search by name (case insensitive)
     List<Customer> findByCustomerNameContainingIgnoreCase(String customerName);
-
-    // Filter by country
     List<Customer> findByCountry(String country);
-
-    // Filter by city
     List<Customer> findByCity(String city);
 
-    // Find by sales rep employee number
-    List<Customer> findBySalesRepEmployeeNumber(Integer salesRepEmployeeNumber);
+    List<Customer> findBySalesRep_EmployeeNumber(Integer employeeNumber);
 }

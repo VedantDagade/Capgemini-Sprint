@@ -1,16 +1,17 @@
 package com.classicmodels.classicmodels.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude = {"productLineObj", "orderDetails"})
+@EqualsAndHashCode(of = "productCode")
 public class Product {
 
     @Id
@@ -19,9 +20,6 @@ public class Product {
 
     @Column(name = "productName", nullable = false)
     private String productName;
-
-    @Column(name = "productLine", nullable = false)
-    private String productLine;
 
     @Column(name = "productScale", nullable = false)
     private String productScale;
@@ -40,4 +38,13 @@ public class Product {
 
     @Column(name = "MSRP", nullable = false)
     private BigDecimal msrp;
+
+    // Many products → one product line
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productLine", nullable = false)
+    private ProductLine productLineObj;
+
+    // One product → many order details
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }

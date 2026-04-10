@@ -1,16 +1,17 @@
 package com.classicmodels.classicmodels.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude = {"customer", "orderDetails"})
+@EqualsAndHashCode(of = "orderNumber")
 public class Order {
 
     @Id
@@ -32,6 +33,12 @@ public class Order {
     @Column(name = "comments", columnDefinition = "TEXT")
     private String comments;
 
-    @Column(name = "customerNumber", nullable = false)
-    private Integer customerNumber;
+    // Many orders → one customer
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customerNumber", nullable = false)
+    private Customer customer;
+
+    // One order → many order details
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }

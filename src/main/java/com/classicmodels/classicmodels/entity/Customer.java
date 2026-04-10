@@ -1,16 +1,17 @@
 package com.classicmodels.classicmodels.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude = {"salesRep", "orders", "payments"})
+@EqualsAndHashCode(of = "customerNumber")
 public class Customer {
 
     @Id
@@ -47,9 +48,19 @@ public class Customer {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "salesRepEmployeeNumber")
-    private Integer salesRepEmployeeNumber;
-
     @Column(name = "creditLimit")
     private BigDecimal creditLimit;
+
+    // Many customers → one sales rep employee
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "salesRepEmployeeNumber")
+    private Employee salesRep;
+
+    // One customer → many orders
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
+
+    // One customer → many payments
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Payment> payments = new ArrayList<>();
 }

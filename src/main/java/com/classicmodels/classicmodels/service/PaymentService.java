@@ -1,31 +1,43 @@
 package com.classicmodels.classicmodels.service;
 
+import com.classicmodels.classicmodels.dto.PaymentDTO;
+import com.classicmodels.classicmodels.entity.Customer;
 import com.classicmodels.classicmodels.entity.Payment;
 import com.classicmodels.classicmodels.entity.PaymentId;
 import com.classicmodels.classicmodels.exception.ResourceNotFoundException;
+import com.classicmodels.classicmodels.mapper.EntityMapper;
+import com.classicmodels.classicmodels.repository.CustomerRepository;
 import com.classicmodels.classicmodels.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final CustomerRepository customerRepository;
+    private final EntityMapper mapper;
 
-    // GET all payments
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+    public List<PaymentDTO> getAllPayments() {
+        return paymentRepository.findAll()
+                .stream()
+                .map(mapper::toPaymentDTO)
+                .toList();
     }
 
-    // GET payments by customer
-    public List<Payment> getPaymentsByCustomer(Integer customerNumber) {
-        return paymentRepository.findByIdCustomerNumber(customerNumber);
+    public List<PaymentDTO> getPaymentsByCustomer(Integer customerNumber) {
+        return paymentRepository.findByCustomer_CustomerNumber(customerNumber)
+                .stream()
+                .map(mapper::toPaymentDTO)
+                .toList();
     }
 
-    // CREATE new payment
-    public Payment createPayment(Payment payment) {
+    public PaymentDTO createPayment(Payment payment) {
         if (paymentRepository.existsById(payment.getId())) {
             throw new RuntimeException(
                     "Payment already exists with customerNumber: "
@@ -33,10 +45,15 @@ public class PaymentService {
                             + " and checkNumber: "
                             + payment.getId().getCheckNumber());
         }
-        return paymentRepository.save(payment);
+        Customer customer = customerRepository
+                .findById(payment.getId().getCustomerNumber())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found with id: "
+                                + payment.getId().getCustomerNumber()));
+        payment.setCustomer(customer);
+        return mapper.toPaymentDTO(paymentRepository.save(payment));
     }
 
-    // DELETE payment by composite key
     public void deletePayment(Integer customerNumber, String checkNumber) {
         PaymentId id = new PaymentId(customerNumber, checkNumber);
         Payment existing = paymentRepository.findById(id)

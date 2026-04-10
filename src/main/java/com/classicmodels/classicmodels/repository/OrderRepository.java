@@ -8,9 +8,8 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    // Filter by status
     List<Order> findByStatus(String status);
 
-    // Orders by customer
-    List<Order> findByCustomerNumber(Integer customerNumber);
+    // changed: was findByCustomerNumber(Integer)
+    List<Order> findByCustomer_CustomerNumber(Integer customerNumber);
 }
