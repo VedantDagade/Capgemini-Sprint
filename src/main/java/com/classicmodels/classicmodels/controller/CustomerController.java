@@ -1,6 +1,8 @@
 package com.classicmodels.classicmodels.controller;
 
 import com.classicmodels.classicmodels.dto.CustomerDTO;
+import com.classicmodels.classicmodels.dto.OrderDTO;
+import com.classicmodels.classicmodels.dto.PaymentDTO;
 import com.classicmodels.classicmodels.entity.Customer;
 import com.classicmodels.classicmodels.service.CustomerService;
 import jakarta.validation.Valid;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+
 @RestController
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
@@ -62,4 +65,16 @@ public class CustomerController {
     public ResponseEntity<List<CustomerDTO>> getByCity(@RequestParam String city) {
         return ResponseEntity.ok(customerService.getByCity(city));
     }
-}
+
+    // PRD 3.8 — Get all orders for a specific customer
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<List<OrderDTO>> getOrdersByCustomer(@PathVariable Integer id) {
+        return ResponseEntity.ok(customerService.getOrdersByCustomer(id));
+    }
+
+    // PRD 3.8 — Get all payments for a specific customer
+    @GetMapping("/{id}/payments")
+    public ResponseEntity<List<PaymentDTO>> getPaymentsByCustomer(@PathVariable Integer id) {
+        return ResponseEntity.ok(customerService.getPaymentsByCustomer(id));
+    }
+}

@@ -1,10 +1,12 @@
 package com.classicmodels.classicmodels.service;
 
+import com.classicmodels.classicmodels.dto.CustomerDTO;
 import com.classicmodels.classicmodels.dto.EmployeeDTO;
 import com.classicmodels.classicmodels.entity.Employee;
 import com.classicmodels.classicmodels.entity.Office;
 import com.classicmodels.classicmodels.exception.ResourceNotFoundException;
 import com.classicmodels.classicmodels.mapper.EntityMapper;
+import com.classicmodels.classicmodels.repository.CustomerRepository;
 import com.classicmodels.classicmodels.repository.EmployeeRepository;
 import com.classicmodels.classicmodels.repository.OfficeRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final OfficeRepository officeRepository;
+    private final CustomerRepository customerRepository;
     private final EntityMapper mapper;
 
     public List<EmployeeDTO> getAllEmployees() {
@@ -104,5 +107,14 @@ public class EmployeeService {
     public List<EmployeeDTO> getByManager(Integer managerEmployeeNumber) {
         return employeeRepository.findByManager_EmployeeNumber(managerEmployeeNumber)
                 .stream().map(mapper::toEmployeeDTO).toList();
+    }
+
+    // PRD 3.9 — Get all customers managed by this employee as sales rep
+    public List<CustomerDTO> getCustomersBySalesRep(Integer id) {
+        employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Employee not found with id: " + id));
+        return customerRepository.findBySalesRep_EmployeeNumber(id)
+                .stream().map(mapper::toCustomerDTO).toList();
     }
 }

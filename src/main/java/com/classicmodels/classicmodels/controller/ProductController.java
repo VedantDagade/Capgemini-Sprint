@@ -53,4 +53,11 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> getProductsByLine(@RequestParam String line) {
         return ResponseEntity.ok(productService.getProductsByLine(line));
     }
+
+    // PRD 3.7 — Get products with stock below threshold (default: 100)
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductDTO>> getLowStockProducts(
+            @RequestParam(defaultValue = "100") Short threshold) {
+        return ResponseEntity.ok(productService.getLowStockProducts(threshold));
+    }
 }

@@ -83,4 +83,12 @@ public class ProductService {
                 .map(mapper::toProductDTO)
                 .toList();
     }
+
+    // PRD 3.7 — Get products with stock below threshold
+    public List<ProductDTO> getLowStockProducts(Short threshold) {
+        return productRepository.findByQuantityInStockLessThan(threshold)
+                .stream()
+                .map(mapper::toProductDTO)
+                .toList();
+    }
 }

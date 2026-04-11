@@ -1,12 +1,16 @@
 package com.classicmodels.classicmodels.service;
 
 import com.classicmodels.classicmodels.dto.CustomerDTO;
+import com.classicmodels.classicmodels.dto.OrderDTO;
+import com.classicmodels.classicmodels.dto.PaymentDTO;
 import com.classicmodels.classicmodels.entity.Customer;
 import com.classicmodels.classicmodels.entity.Employee;
 import com.classicmodels.classicmodels.exception.ResourceNotFoundException;
 import com.classicmodels.classicmodels.mapper.EntityMapper;
 import com.classicmodels.classicmodels.repository.CustomerRepository;
 import com.classicmodels.classicmodels.repository.EmployeeRepository;
+import com.classicmodels.classicmodels.repository.OrderRepository;
+import com.classicmodels.classicmodels.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,8 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final EmployeeRepository employeeRepository;
+    private final OrderRepository orderRepository;
+    private final PaymentRepository paymentRepository;
     private final EntityMapper mapper;
 
     public List<CustomerDTO> getAllCustomers() {
@@ -96,5 +102,23 @@ public class CustomerService {
     public List<CustomerDTO> getByCity(String city) {
         return customerRepository.findByCity(city)
                 .stream().map(mapper::toCustomerDTO).toList();
+    }
+
+    // PRD 3.8 — Get all orders for a specific customer
+    public List<OrderDTO> getOrdersByCustomer(Integer id) {
+        customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found with id: " + id));
+        return orderRepository.findByCustomer_CustomerNumber(id)
+                .stream().map(mapper::toOrderDTO).toList();
+    }
+
+    // PRD 3.8 — Get all payments for a specific customer
+    public List<PaymentDTO> getPaymentsByCustomer(Integer id) {
+        customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer not found with id: " + id));
+        return paymentRepository.findByCustomer_CustomerNumber(id)
+                .stream().map(mapper::toPaymentDTO).toList();
     }
 }

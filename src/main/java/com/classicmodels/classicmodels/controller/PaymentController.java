@@ -3,6 +3,7 @@ package com.classicmodels.classicmodels.controller;
 import com.classicmodels.classicmodels.dto.PaymentDTO;
 import com.classicmodels.classicmodels.entity.Payment;
 import com.classicmodels.classicmodels.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ResponseEntity<PaymentDTO> createPayment(@RequestBody Payment payment) {
+    public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody Payment payment) {
         return new ResponseEntity<>(paymentService.createPayment(payment), HttpStatus.CREATED);
     }
 

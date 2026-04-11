@@ -2,7 +2,9 @@ package com.classicmodels.classicmodels.controller;
 
 import com.classicmodels.classicmodels.dto.OrderDTO;
 import com.classicmodels.classicmodels.dto.OrderDetailDTO;
+import com.classicmodels.classicmodels.dto.OrderTotalDTO;
 import com.classicmodels.classicmodels.entity.Order;
+import com.classicmodels.classicmodels.entity.OrderDetail;
 import com.classicmodels.classicmodels.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -63,5 +65,19 @@ public class OrderController {
     @GetMapping("/{id}/details")
     public ResponseEntity<List<OrderDetailDTO>> getOrderDetails(@PathVariable Integer id) {
         return ResponseEntity.ok(orderService.getOrderDetails(id));
+    }
+
+    // PRD 3.5 — Add a product line item to an existing order (with stock check)
+    @PostMapping("/{id}/details")
+    public ResponseEntity<OrderDetailDTO> addOrderDetail(
+            @PathVariable Integer id,
+            @Valid @RequestBody OrderDetail orderDetail) {
+        return new ResponseEntity<>(orderService.addOrderDetail(id, orderDetail), HttpStatus.CREATED);
+    }
+
+    // PRD 3.6 — Get total monetary value breakdown of an order
+    @GetMapping("/{id}/total")
+    public ResponseEntity<OrderTotalDTO> getOrderTotal(@PathVariable Integer id) {
+        return ResponseEntity.ok(orderService.getOrderTotal(id));
     }
 }

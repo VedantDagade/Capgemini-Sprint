@@ -12,4 +12,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     // changed: was findByCustomerNumber(Integer)
     List<Order> findByCustomer_CustomerNumber(Integer customerNumber);
+
+    Long countByStatus(String status);
 }

@@ -1,5 +1,6 @@
 package com.classicmodels.classicmodels.controller;
 
+import com.classicmodels.classicmodels.dto.CustomerDTO;
 import com.classicmodels.classicmodels.dto.EmployeeDTO;
 import com.classicmodels.classicmodels.entity.Employee;
 import com.classicmodels.classicmodels.service.EmployeeService;
@@ -30,14 +31,14 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody Employee employee) {
         return new ResponseEntity<>(employeeService.createEmployee(employee), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDTO> updateEmployee(
             @PathVariable Integer id,
-            @RequestBody Employee employee) {
+            @Valid @RequestBody Employee employee) {
         return ResponseEntity.ok(employeeService.updateEmployee(id, employee));
     }
 
@@ -72,4 +73,10 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeDTO>> getByManager(@RequestParam Integer managerId) {
         return ResponseEntity.ok(employeeService.getByManager(managerId));
     }
-}
+
+    // PRD 3.9 — Get all customers managed by this employee as sales rep
+    @GetMapping("/{id}/customers")
+    public ResponseEntity<List<CustomerDTO>> getCustomersBySalesRep(@PathVariable Integer id) {
+        return ResponseEntity.ok(employeeService.getCustomersBySalesRep(id));
+    }
+}
