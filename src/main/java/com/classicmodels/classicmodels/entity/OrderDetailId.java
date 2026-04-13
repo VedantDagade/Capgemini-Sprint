@@ -8,7 +8,8 @@ import java.io.Serializable;
 
 @Embeddable
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderDetailId implements Serializable {
 
     @Column(name = "orderNumber")
@@ -20,4 +21,5 @@ public class OrderDetailId implements Serializable {
     @NotBlank(message = "Product code is required")
     @Size(max = 15, message = "Product code must not exceed 15 characters")
     private String productCode;
+
 }
