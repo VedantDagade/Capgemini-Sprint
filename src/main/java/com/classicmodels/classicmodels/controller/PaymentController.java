@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
 public class PaymentController {
 
@@ -32,6 +32,14 @@ public class PaymentController {
     @PostMapping
     public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody Payment payment) {
         return new ResponseEntity<>(paymentService.createPayment(payment), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{cNo}/{checkNo}")
+    public ResponseEntity<PaymentDTO> updatePayment(
+            @PathVariable Integer cNo,
+            @PathVariable String checkNo,
+            @Valid @RequestBody Payment payment) {
+        return ResponseEntity.ok(paymentService.updatePayment(cNo, checkNo, payment));
     }
 
     @DeleteMapping("/{cNo}/{checkNo}")
