@@ -64,4 +64,19 @@ public class PaymentService {
                                 + checkNumber));
         paymentRepository.delete(existing);
     }
+
+    public PaymentDTO updatePayment(Integer customerNumber, String checkNumber, Payment updatedPayment) {
+        PaymentId id = new PaymentId(customerNumber, checkNumber);
+        Payment existing = paymentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Payment not found with customerNumber: "
+                                + customerNumber
+                                + " and checkNumber: "
+                                + checkNumber));
+        
+        existing.setPaymentDate(updatedPayment.getPaymentDate());
+        existing.setAmount(updatedPayment.getAmount());
+        
+        return mapper.toPaymentDTO(paymentRepository.save(existing));
+    }
 }
