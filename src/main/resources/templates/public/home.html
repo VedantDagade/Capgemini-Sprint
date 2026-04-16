@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+
+<style>
+    /* ============================================================
+       STITCH "THE DIGITAL ATELIER" DESIGN SYSTEM - HOME PAGE
+       Colors: #1B263B (primary), #415A77 (secondary), #778DA9 (tertiary)
+       Fonts: Newsreader (headlines) + Manrope (body)
+       ============================================================ */
+
+    :root {
+        --ds-primary:           #545e76;
+        --ds-primary-dim:       #48526a;
+        --ds-primary-dark:      #1B263B;
+        --ds-secondary:         #415A77;
+        --ds-tertiary:          #778DA9;
+        --ds-surface:           #f8f9fa;
+        --ds-surface-low:       #f1f4f6;
+        --ds-surface-high:      #e3e9ec;
+        --ds-surface-white:     #ffffff;
+        --ds-on-surface:        #2b3437;
+        --ds-on-surface-var:    #586064;
+        --ds-outline:           #737c7f;
+        --ds-outline-var:       #abb3b7;
+        --ds-primary-container: #d7e2ff;
+        --ds-on-primary:        #f7f7ff;
+        --font-headline: 'Newsreader', Georgia, serif;
+        --font-body: 'Manrope', 'Inter', sans-serif;
+        --radius-full: 9999px;
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --nav-height: 72px;
+    }
+
+    /* ── RESET SCOPE FOR HOME PAGE ── */
+    .cm-home * {
+        font-family: var(--font-body);
+        color: var(--ds-on-surface);
+    }
+    .cm-home h1, .cm-home h2, .cm-home h3,
+    .cm-home h4, .cm-home .headline {
+        font-family: var(--font-headline);
+        color: var(--ds-on-surface);
+        font-weight: 400;
+        margin: 0;
+    }
+
+    /* ── BODY ── */
+    body.cm-home-body {
+        background-color: var(--ds-surface);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ── FROSTED GLASS NAVBAR ── */
+    .cm-nav {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        height: var(--nav-height);
+        background: rgba(248, 249, 250, 0.80);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(171, 179, 183, 0.25);
+        display: flex;
+        align-items: center;
+        padding: 0 4rem;
+        justify-content: space-between;
+        transition: background 0.3s;
+    }
+    .cm-nav-brand {
+        font-family: var(--font-headline);
+        font-size: 1.375rem;
+        font-weight: 500;
+        color: var(--ds-primary-dark);
+        letter-spacing: -0.01em;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .cm-nav-brand:hover { color: var(--ds-primary-dark); }
+    .cm-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .cm-nav-links a {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--ds-on-surface-var);
+        text-decoration: none;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+    }
+    .cm-nav-links a:hover { color: var(--ds-on-surface); }
+    .cm-nav-cta {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        background: var(--ds-primary-dark);
+        color: var(--ds-on-primary) !important;
+        padding: 0.5rem 1.25rem;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        letter-spacing: 0.04em;
+        transition: background 0.2s, transform 0.15s;
+    }
+    .cm-nav-cta:hover {
+        background: var(--ds-primary-dim);
+        transform: translateY(-1px);
+        color: var(--ds-on-primary) !important;
+    }
+
+    /* ── HERO SECTION ── */
+    .cm-hero {
+        background: linear-gradient(135deg, var(--ds-primary-dark) 0%, var(--ds-secondary) 60%, var(--ds-tertiary) 100%);
+        padding: 7rem 4rem 6rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 540px;
+        display: flex;
+        align-items: center;
+    }
+    .cm-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Ccircle cx='500' cy='100' r='350' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='100' cy='500' r='250' fill='rgba(255,255,255,0.025)'/%3E%3C/svg%3E") no-repeat right top;
+        background-size: contain;
+        pointer-events: none;
+    }
+    .cm-hero-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+    .cm-hero-label {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .cm-hero-label::before {
+        content: '';
+        display: block;
+        width: 2.5rem;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.4);
+    }
+    .cm-hero-title {
+        font-family: var(--font-headline);
+        font-size: clamp(2.5rem, 5vw, 3.75rem);
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+    }
+    .cm-hero-title em {
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .cm-hero-sub {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.7;
+        margin-bottom: 2.5rem;
+        max-width: 440px;
+    }
+    .cm-hero-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .cm-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        font-weight: 600;
+        background: #ffffff;
+        color: var(--ds-primary-dark) !important;
+        padding: 0.75rem 1.75rem;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: all 0.2s;
+    }
+    .cm-btn-primary:hover {
+        background: var(--ds-primary-container);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .cm-btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: transparent;
+        color: rgba(255,255,255,0.75) !important;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(255,255,255,0.3);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: all 0.2s;
+    }
+    .cm-btn-ghost:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.6);
+        color: #fff !important;
+    }
+    /* Hero right — featured artifact card */
+    .cm-hero-artifact {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--radius-md);
+        backdrop-filter: blur(12px);
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .cm-hero-artifact::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, rgba(215,226,255,0.5), rgba(200,223,254,0.3));
+    }
+    .cm-artifact-index {
+        font-family: var(--font-headline);
+        font-size: 4rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.12);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.04em;
+    }
+    .cm-artifact-name {
+        font-family: var(--font-headline);
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: rgba(255,255,255,0.9);
+        line-height: 1.25;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.01em;
+    }
+    .cm-artifact-desc {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.5);
+        line-height: 1.6;
+    }
+    .cm-artifact-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-top: 1.25rem;
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 0.3rem 0.75rem;
+        border-radius: var(--radius-full);
+    }
+
+    /* ── TONAL TRANSITION ── */
+    .cm-section-shift {
+        background: var(--ds-surface-low);
+    }
+
+    /* ── SECTION HEADER  ── */
+    .cm-section-tag {
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .cm-section-tag::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--ds-outline-var);
+        max-width: 3rem;
+    }
+    .cm-section-title {
+        font-family: var(--font-headline);
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 400;
+        color: var(--ds-on-surface);
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+    }
+    .cm-section-sub {
+        font-family: var(--font-body);
+        font-size: 0.9375rem;
+        font-weight: 300;
+        color: var(--ds-on-surface-var);
+        line-height: 1.7;
+    }
+
+    /* ── STATS / NUMBERS BAR ── */
+    .cm-stats {
+        background: var(--ds-surface-white);
+        border-top: 1px solid var(--ds-surface-high);
+        border-bottom: 1px solid var(--ds-surface-high);
+        padding: 2.5rem 4rem;
+    }
+    .cm-stats-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        text-align: center;
+    }
+    .cm-stat-val {
+        font-family: var(--font-headline);
+        font-size: 2.5rem;
+        font-weight: 400;
+        color: var(--ds-primary-dark);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+    }
+    .cm-stat-label {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+    }
+
+    /* ── TEAM SECTION ── */
+    .cm-team {
+        padding: 6rem 4rem;
+        background: var(--ds-surface-low);
+    }
+    .cm-team-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .cm-team-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+        margin-bottom: 4rem;
+    }
+    .cm-team-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.5rem;
+    }
+    .cm-member-card {
+        background: var(--ds-surface-white);
+        border-radius: var(--radius-md);
+        padding: 1.75rem 1.25rem 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        transition: transform 0.25s, box-shadow 0.25s;
+        position: relative;
+        overflow: hidden;
+    }
+    .cm-member-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--ds-primary-dark), var(--ds-tertiary));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s;
+    }
+    .cm-member-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 48px rgba(43, 52, 55, 0.10);
+    }
+    .cm-member-card:hover::after { transform: scaleX(1); }
+    .cm-member-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--ds-primary-dark), var(--ds-tertiary));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        overflow: hidden;
+        border: 2px solid var(--ds-surface-high);
+    }
+    .cm-member-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .cm-member-name {
+        font-family: var(--font-headline);
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: var(--ds-on-surface);
+        letter-spacing: -0.01em;
+        margin-bottom: 0.35rem;
+    }
+    .cm-member-role {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+    }
+    .cm-member-view {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--ds-primary-dark);
+        margin-top: 1rem;
+        opacity: 0;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+    .cm-member-card:hover .cm-member-view { opacity: 1; }
+
+    /* ── JOURNAL / NEWSLETTER ── */
+    .cm-journal {
+        background: var(--ds-surface);
+        padding: 6rem 4rem;
+    }
+    .cm-journal-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: center;
+    }
+    .cm-journal-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 2rem;
+    }
+    .cm-journal-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: var(--ds-surface-low);
+        border: none;
+        border-bottom: 2px solid var(--ds-outline-var);
+        font-family: var(--font-body);
+        font-size: 0.9375rem;
+        color: var(--ds-on-surface);
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .cm-journal-input::placeholder { color: var(--ds-outline); }
+    .cm-journal-input:focus { border-bottom-color: var(--ds-primary-dark); }
+    .cm-journal-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, var(--ds-primary-dark), var(--ds-primary-dim));
+        color: #fff;
+        padding: 0.875rem 2rem;
+        border: none;
+        cursor: pointer;
+        letter-spacing: 0.04em;
+        transition: opacity 0.2s, transform 0.15s;
+        align-self: flex-start;
+        border-radius: var(--radius-sm);
+    }
+    .cm-journal-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    /* Journal right — about cards */
+    .cm-journal-pillars {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+    .cm-pillar {
+        display: flex;
+        gap: 1.25rem;
+        align-items: flex-start;
+    }
+    .cm-pillar-icon {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border-radius: var(--radius-sm);
+        background: var(--ds-primary-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ds-primary-dark);
+        font-size: 1rem;
+    }
+    .cm-pillar-title {
+        font-family: var(--font-headline);
+        font-size: 1.0625rem;
+        font-weight: 400;
+        color: var(--ds-on-surface);
+        margin-bottom: 0.25rem;
+    }
+    .cm-pillar-text {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 300;
+        color: var(--ds-on-surface-var);
+        line-height: 1.65;
+    }
+
+    /* ── FOOTER ── */
+    .cm-footer {
+        background: var(--ds-primary-dark);
+        color: rgba(255,255,255,0.55);
+        padding: 3rem 4rem 2rem;
+        margin-top: auto;
+    }
+    .cm-footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .cm-footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+    .cm-footer-brand {
+        font-family: var(--font-headline);
+        font-size: 1.25rem;
+        font-weight: 400;
+        color: rgba(255,255,255,0.85);
+        margin-bottom: 0.5rem;
+    }
+    .cm-footer-tagline {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.35);
+        max-width: 260px;
+        line-height: 1.6;
+    }
+    .cm-footer-links {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+    .cm-footer-links a {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 400;
+        color: rgba(255,255,255,0.45);
+        text-decoration: none;
+        letter-spacing: 0.04em;
+        transition: color 0.2s;
+    }
+    .cm-footer-links a:hover { color: rgba(255,255,255,0.85); }
+    .cm-footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .cm-footer-copy {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.3);
+    }
+    .cm-footer-login a {
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 0.35rem 0.9rem;
+        border-radius: var(--radius-sm);
+        transition: all 0.2s;
+    }
+    .cm-footer-login a:hover {
+        color: rgba(255,255,255,0.85);
+        border-color: rgba(255,255,255,0.4);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+        .cm-team-grid { grid-template-columns: repeat(3, 1fr); }
+        .cm-hero-inner, .cm-journal-inner, .cm-team-header { grid-template-columns: 1fr; }
+        .cm-stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .cm-nav, .cm-hero, .cm-team, .cm-journal, .cm-stats, .cm-footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .cm-team-grid { grid-template-columns: repeat(2, 1fr); }
+        .cm-nav-links { display: none; }
+        .cm-hero { padding-top: 4rem; padding-bottom: 4rem; }
+        .cm-stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+        .cm-team-grid { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+
+<body class="cm-home-body">
+<div class="cm-home">
+
+    <!-- ══════════════════════════════════════
+         FROSTED GLASS NAVIGATION
+    ══════════════════════════════════════ -->
+    <nav class="cm-nav">
+        <a href="/" class="cm-nav-brand">
+            <i class="fa-solid fa-car"></i> ClassicModels
+        </a>
+        <ul class="cm-nav-links">
+            <!-- Navigation items removed as per request -->
+        </ul>
+        <a th:href="@{/login}" class="cm-nav-cta">Enter System &rarr;</a>
+    </nav>
+
+    <!-- ══════════════════════════════════════
+         HERO — "The Art of Timeless Design."
+    ══════════════════════════════════════ -->
+    <section class="cm-hero">
+        <div class="cm-hero-inner">
+            <!-- Left -->
+            <div>
+                <div class="cm-hero-label">Capgemini Sprint &mdash; 2026</div>
+                <h1 class="cm-hero-title">
+                    Classical<br><em>Business Model.</em>
+                </h1>
+                <p class="cm-hero-sub">
+                    Curating a legacy of precision and elegance. Discover our exclusive collection of archival pieces crafted for the modern connoisseur.
+                </p>
+                <div class="cm-hero-actions">
+                    <a th:href="@{/login}" class="cm-btn-primary">
+                        <i class="fa-solid fa-desktop"></i> Enter System
+                    </a>
+                    <a href="#team" class="cm-btn-ghost">
+                        <i class="fa-solid fa-users"></i> Meet the Team
+                    </a>
+                </div>
+            </div>
+            <!-- Right — Featured Artifact Card -->
+            <div class="cm-hero-artifact">
+                <div class="cm-artifact-index">01.</div>
+                <div class="cm-artifact-name">Global Archive System</div>
+                <div class="cm-artifact-desc">
+                    Strategic B2B infrastructure managing archival inventories, global logistics, and enterprise sales cycles with digital precision.
+                </div>
+                <div class="cm-artifact-chip">
+                    <i class="fa-regular fa-compass"></i> Sprint 2026 Core
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         STATS BAR
+    ══════════════════════════════════════ -->
+    <div class="cm-stats">
+        <div class="cm-stats-grid">
+            <div>
+                <div class="cm-stat-val">110+</div>
+                <div class="cm-stat-label">Products Curated</div>
+            </div>
+            <div>
+                <div class="cm-stat-val">7</div>
+                <div class="cm-stat-label">Product Lines</div>
+            </div>
+            <div>
+                <div class="cm-stat-val">122</div>
+                <div class="cm-stat-label">Clients Worldwide</div>
+            </div>
+            <div>
+                <div class="cm-stat-val">5</div>
+                <div class="cm-stat-label">Global Offices</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         MEET OUR TEAM
+    ══════════════════════════════════════ -->
+    <section class="cm-team" id="team">
+        <div class="cm-team-inner">
+            <!-- Header -->
+            <div class="cm-team-header">
+                <div>
+                    <div class="cm-section-tag">Our Developers</div>
+                    <h2 class="cm-section-title">Meet Our Team</h2>
+                    <p class="cm-section-sub">
+                        These are the software developers who built this classical business model platform with passion and precision.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="cm-team-grid">
+                <!-- Member 1: Sumit Sonawane -->
+                <a th:href="@{/team/sumit}" class="cm-member-card">
+                    <div class="cm-member-avatar">
+                        <img th:src="@{/images/team/sumit.jpg}" alt="Sumit Sonawane">
+                    </div>
+                    <div class="cm-member-name">Sumit Sonawane</div>
+                    <div class="cm-member-role">Customer Service</div>
+                    <div class="cm-member-view">Developer <i class="fa-solid fa-code fa-xs"></i></div>
+                </a>
+                <!-- Member 2: Vikas Gadekar -->
+                <a th:href="@{/team/vikas}" class="cm-member-card">
+                    <div class="cm-member-avatar">
+                        <img th:src="@{/images/team/vikas.jpg}" alt="Vikas Gadekar">
+                    </div>
+                    <div class="cm-member-name">Vikas Gadekar</div>
+                    <div class="cm-member-role">Order Service</div>
+                    <div class="cm-member-view">Developer <i class="fa-solid fa-code fa-xs"></i></div>
+                </a>
+                <!-- Member 3: Vedant Dagade -->
+                <a th:href="@{/team/vedant}" class="cm-member-card">
+                    <div class="cm-member-avatar">
+                        <img th:src="@{/images/team/vedant.jpg}" alt="Vedant Dagade">
+                    </div>
+                    <div class="cm-member-name">Vedant Dagade</div>
+                    <div class="cm-member-role">Product Service</div>
+                    <div class="cm-member-view">Developer <i class="fa-solid fa-code fa-xs"></i></div>
+                </a>
+                <!-- Member 4: Vrushab Salunka -->
+                <a th:href="@{/team/vrushab}" class="cm-member-card">
+                    <div class="cm-member-avatar">
+                        <img th:src="@{/images/team/vrushab.jpg}" alt="Vrushab Salunka">
+                    </div>
+                    <div class="cm-member-name">Vrushab Salunke</div>
+                    <div class="cm-member-role">Payment & Office</div>
+                    <div class="cm-member-view">Developer <i class="fa-solid fa-code fa-xs"></i></div>
+                </a>
+                <!-- Member 5: Anshul Bhaisare -->
+                <a th:href="@{/team/anshul}" class="cm-member-card">
+                    <div class="cm-member-avatar">
+                        <img th:src="@{/images/team/anshul.jpg}" alt="Anshul Bhaisare">
+                    </div>
+                    <div class="cm-member-name">Anshul Bhaisare</div>
+                    <div class="cm-member-role">Employee Service</div>
+                    <div class="cm-member-view">Developer <i class="fa-solid fa-code fa-xs"></i></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         THE MONTHLY JOURNAL
+    ══════════════════════════════════════ -->
+    <section class="cm-journal" id="journal">
+        <div class="cm-journal-inner">
+            <!-- Left — Newsletter -->
+            <div>
+                <div class="cm-section-tag">The Monthly Journal</div>
+                <h2 class="cm-section-title">Exclusive<br><em style="font-style:italic; color:var(--ds-on-surface-var);">Insights &amp; Archives</em></h2>
+                <p class="cm-section-sub" style="margin-top:1rem;">
+                    Exclusive insights into automotive history, upcoming collections, and private auction events — delivered straight to your inbox.
+                </p>
+                <form class="cm-journal-form" onsubmit="return false;">
+                    <input type="email" class="cm-journal-input" placeholder="Your email address">
+                    <button type="submit" class="cm-journal-submit">
+                        <i class="fa-regular fa-paper-plane"></i> Subscribe to Journal
+                    </button>
+                </form>
+            </div>
+            <!-- Right — Three Pillars -->
+            <div class="cm-journal-pillars">
+                <div class="cm-pillar">
+                    <div class="cm-pillar-icon"><i class="fa-solid fa-car-side"></i></div>
+                    <div>
+                        <div class="cm-pillar-title">Archival Precision</div>
+                        <div class="cm-pillar-text">Every product in our catalogue is meticulously documented, verified, and preserved to the highest archival standards.</div>
+                    </div>
+                </div>
+                <div class="cm-pillar">
+                    <div class="cm-pillar-icon"><i class="fa-solid fa-globe"></i></div>
+                    <div>
+                        <div class="cm-pillar-title">Global Clientele</div>
+                        <div class="cm-pillar-text">Serving discerning collectors and connoisseurs across five continents through our worldwide office network.</div>
+                    </div>
+                </div>
+                <div class="cm-pillar">
+                    <div class="cm-pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <div class="cm-pillar-title">Enterprise Reliability</div>
+                        <div class="cm-pillar-text">Built on a robust B2B platform designed for the Capgemini Sprint, ensuring data integrity and scalable operations.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════ -->
+    <footer class="cm-footer">
+        <div class="cm-footer-inner">
+            <div class="cm-footer-top">
+                <div>
+                    <div class="cm-footer-brand">
+                        <i class="fa-solid fa-car"></i> ClassicModels
+                    </div>
+                    <div class="cm-footer-tagline">
+                        A Capgemini Sprint enterprise B2B platform for the modern connoisseur.
+                    </div>
+                </div>
+                <div class="cm-footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Press Kit</a>
+                    <a th:href="@{/api-explorer}">API Explorer</a>
+                </div>
+            </div>
+            <div class="cm-footer-bottom">
+                <div class="cm-footer-copy">
+                    &copy; 2026 ClassicModels Project Team &mdash; Built for the Capgemini Sprint Program
+                </div>
+                <div class="cm-footer-login">
+                    <a th:href="@{/login}">Admin Login &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div><!-- /.cm-home -->
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

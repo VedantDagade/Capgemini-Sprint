@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('API Explorer')}"></head>
+<body>
+    <div style="background-color: var(--primary); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;">
+        <a href="javascript:history.back()" class="btn btn-outline" style="color: white; border-color: rgba(255,255,255,0.3);"><i class="fa-solid fa-arrow-left"></i> Back to Team</a>
+        <div style="color: var(--accent); font-weight: 700;"><i class="fa-solid fa-laptop-code"></i> Live API Explorer</div>
+    </div>
+    
+    <div class="container" style="padding: 3rem 1.5rem; max-width: 900px;">
+        <div style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <span class="badge badge-success" style="font-size: 1rem; padding: 0.25rem 0.75rem;">GET</span>
+                <h1 style="font-family: monospace; margin: 0; font-size: 1.75rem;">/api/v1/orders</h1>
+            </div>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Retrieve all orders with robust filtering and pagination logic applied. Includes sorting capabilities.</p>
+        </div>
+        
+        <div class="grid-2">
+            <!-- Request Panel -->
+            <div class="card" style="background-color: #F8FAFC;">
+                <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-paper-plane" style="color: var(--primary-light);"></i> Request</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Query Parameter: <span style="font-family: monospace; color: var(--primary);">status</span> (Optional)</label>
+                    <select class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="In Process">In Process</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;"><i class="fa-solid fa-bolt"></i> Try It Now</button>
+            </div>
+            
+            <!-- Response Panel -->
+            <div class="card" style="background-color: #1E293B; color: #E2E8F0; border: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="margin: 0; color: white;"><i class="fa-solid fa-reply"></i> Response</h3>
+                    <span class="badge badge-success">200 OK</span>
+                </div>
+                
+                <pre style="background-color: #0F172A; padding: 1rem; border-radius: var(--radius-md); overflow-x: auto; font-family: monospace; font-size: 0.875rem; color: #A7F3D0; min-height: 250px;">
+{
+  "content": [
+    {
+      "orderNumber": 10100,
+      "orderDate": "2023-01-06",
+      "requiredDate": "2023-01-13",
+      "shippedDate": "2023-01-10",
+      "status": "Shipped",
+      "comments": null,
+      "customerNumber": 363
+    },
+    {
+      "orderNumber": 10101,
+      "orderDate": "2023-01-09",
+      "requiredDate": "2023-01-18",
+      "shippedDate": "2023-01-11",
+      "status": "Shipped",
+      "comments": "Check on availability.",
+      "customerNumber": 128
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 2
+  },
+  "totalElements": 326
+}
+                </pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

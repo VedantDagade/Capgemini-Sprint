@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin Dashboard')}"></head>
+<body class="page-wrapper admin-layout">
+    
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <h1 style="margin: 0;"><i class="fa-solid fa-chart-pie"></i> Executive Dashboard</h1>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <i class="fa-solid fa-bell" style="font-size: 1.25rem; color: var(--text-muted);"></i>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="width: 32px; height: 32px; background-color: var(--primary); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">D</div>
+                    <span style="font-weight: 600;">Diane Murphy</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="grid-4" style="margin-bottom: 2rem;">
+            <div class="card" style="border-left: 4px solid var(--status-info);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h3 style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">Total Customers</h3>
+                    <i class="fa-solid fa-users" style="color: var(--status-info);"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">122</div>
+            </div>
+            
+            <div class="card" style="border-left: 4px solid var(--status-success);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h3 style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">Total Orders</h3>
+                    <i class="fa-solid fa-boxes-stacked" style="color: var(--status-success);"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">326</div>
+            </div>
+            
+            <div class="card" style="border-left: 4px solid var(--accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h3 style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">Total Payments</h3>
+                    <i class="fa-solid fa-sack-dollar" style="color: var(--accent);"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">$8.89M</div>
+            </div>
+            
+            <div class="card" style="border-left: 4px solid var(--primary-light);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h3 style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">Total Employees</h3>
+                    <i class="fa-solid fa-user-tie" style="color: var(--primary-light);"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">23</div>
+            </div>
+        </div>
+        
+        <!-- Charts Placeholders -->
+        <div class="grid-3" style="margin-bottom: 2rem;">
+            <div class="card" style="min-height: 250px; display: flex; flex-direction: column;">
+                <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 1rem;">Orders by Status (Bar Chart)</h3>
+                <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; background-color: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+                    <i class="fa-solid fa-chart-column fa-3x" style="color: var(--text-muted); opacity: 0.3;"></i>
+                </div>
+            </div>
+            
+            <div class="card" style="min-height: 250px; display: flex; flex-direction: column;">
+                <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 1rem;">Revenue Over Time (Line Chart)</h3>
+                <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; background-color: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+                    <i class="fa-solid fa-chart-line fa-3x" style="color: var(--text-muted); opacity: 0.3;"></i>
+                </div>
+            </div>
+            
+            <div class="card" style="min-height: 250px; display: flex; flex-direction: column;">
+                <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 1rem;">Products by Line (Pie Chart)</h3>
+                <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; background-color: #F8FAFC; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+                    <i class="fa-solid fa-chart-pie fa-3x" style="color: var(--text-muted); opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity Tables -->
+        <div class="grid-2">
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 1rem;">Latest 5 Orders</h3>
+                    <a href="/admin/orders" style="font-size: 0.875rem;">View All</a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Status</th>
+                            <th>Customer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>10100</td><td><span class="badge badge-success">Shipped</span></td><td>103</td></tr>
+                        <tr><td>10101</td><td><span class="badge badge-info">In Process</span></td><td>112</td></tr>
+                        <tr><td>10102</td><td><span class="badge badge-warning">On Hold</span></td><td>114</td></tr>
+                        <tr><td>10103</td><td><span class="badge badge-success">Shipped</span></td><td>119</td></tr>
+                        <tr><td>10104</td><td><span class="badge badge-danger">Cancelled</span></td><td>121</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 1rem;">Latest 5 Payments</h3>
+                    <a href="/admin/payments" style="font-size: 0.875rem;">View All</a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Check #</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>HQ336336</td><td>103</td><td style="font-weight: 600; color: var(--status-success);">$6,066.78</td></tr>
+                        <tr><td>JM555205</td><td>112</td><td style="font-weight: 600; color: var(--status-success);">$14,571.44</td></tr>
+                        <tr><td>OM314933</td><td>114</td><td style="font-weight: 600; color: var(--status-success);">$1,676.14</td></tr>
+                        <tr><td>BO864823</td><td>119</td><td style="font-weight: 600; color: var(--status-success);">$14,928.32</td></tr>
+                        <tr><td>FN155234</td><td>121</td><td style="font-weight: 600; color: var(--status-success);">$8.09</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

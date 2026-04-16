@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Employee Registry')}"></head>
+
+<style>
+    :root {
+        --ds-primary:           #545e76;
+        --ds-primary-dim:       #48526a;
+        --ds-primary-dark:      #1B263B;
+        --ds-secondary:         #415A77;
+        --ds-tertiary:          #778DA9;
+        --ds-surface:           #f8f9fa;
+        --ds-surface-low:       #f1f4f6;
+        --ds-surface-high:      #e3e9ec;
+        --ds-surface-white:     #ffffff;
+        --ds-on-surface:        #2b3437;
+        --ds-on-surface-var:    #586064;
+        --ds-outline:           #737c7f;
+        --ds-outline-var:       #abb3b7;
+        --font-headline: 'Newsreader', Georgia, serif;
+        --font-body: 'Manrope', 'Inter', sans-serif;
+        --radius-md: 8px;
+        --radius-sm: 4px;
+    }
+
+    body.admin-layout {
+        background-color: var(--ds-surface);
+        min-height: 100vh;
+        display: flex;
+        overflow-x: hidden;
+    }
+
+    .main-content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 4rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #f1f4f6 100%);
+    }
+
+    /* ── SECTION HEADER ── */
+    .archive-tag {
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .archive-tag::after {
+        content: '';
+        width: 3rem;
+        height: 1px;
+        background: var(--ds-outline-var);
+    }
+    .archive-title {
+        font-family: var(--font-headline);
+        font-size: 2.5rem;
+        font-weight: 400;
+        color: var(--ds-primary-dark);
+        letter-spacing: -0.02em;
+        margin-bottom: 2.5rem;
+    }
+
+    /* ── FROSTED TOOLBAR ── */
+    .archive-toolbar {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+    .toolbar-group {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    .archive-input {
+        background: #ffffff;
+        border: 1px solid var(--ds-surface-high);
+        border-radius: var(--radius-sm);
+        padding: 0.625rem 1rem;
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        color: var(--ds-on-surface);
+        outline: none;
+        transition: all 0.2s;
+        width: 200px;
+    }
+    .archive-input:focus { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(84, 94, 118, 0.1); }
+    
+    .archive-btn-primary {
+        background: var(--ds-primary-dark);
+        color: #fff;
+        padding: 0.625rem 1.25rem;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+    .archive-btn-primary:hover { background: var(--ds-primary-dim); transform: translateY(-1px); }
+
+    /* ── DATA REGISTRY ── */
+    .archive-card {
+        background: #ffffff;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--ds-surface-high);
+        box-shadow: 0 8px 32px rgba(43, 52, 55, 0.04);
+        overflow: hidden;
+    }
+    .archive-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-body);
+    }
+    .archive-table th {
+        background: var(--ds-surface-low);
+        padding: 1.25rem 1.5rem;
+        text-align: left;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+        border-bottom: 1px solid var(--ds-surface-high);
+    }
+    .archive-table td {
+        padding: 1.25rem 1.5rem;
+        font-size: 0.875rem;
+        color: var(--ds-on-surface);
+        border-bottom: 1px solid var(--ds-surface-low);
+    }
+    .archive-table tr { cursor: pointer; transition: background 0.2s; }
+    .archive-table tr:hover td { background: var(--ds-surface-low); }
+    
+    .id-col { font-family: 'Newsreader', serif; font-size: 1.125rem; font-weight: 500; color: var(--ds-primary-dark); }
+    .name-col { font-weight: 600; color: var(--ds-primary-dark); }
+    
+    .action-btn {
+        width: 32px; height: 32px;
+        border-radius: var(--radius-sm);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--ds-surface-high);
+        background: #fff;
+        color: var(--ds-outline);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .action-btn:hover { border-color: var(--ds-primary); color: var(--ds-primary-dark); }
+    .action-btn.delete:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+
+    #loadingIndicator { display: none; padding: 1rem; text-align: center; font-size: 0.75rem; color: var(--ds-outline); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* ── SLIDING DRAWER ── */
+    #drawerOverlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(27, 38, 59, 0.4); backdrop-filter: blur(4px);
+        z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s;
+    }
+    #drawerOverlay.active { opacity: 1; visibility: visible; }
+
+    #entryDrawer {
+        position: fixed; right: -480px; top: 0;
+        width: 480px; height: 100%;
+        background: #fff; z-index: 1001;
+        box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+        transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex; flex-direction: column;
+    }
+    #entryDrawer.active { right: 0; }
+
+    .drawer-header { padding: 2.5rem; border-bottom: 1px solid var(--ds-surface-high); }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 2.5rem; }
+    .drawer-footer { padding: 2rem 2.5rem; border-top: 1px solid var(--ds-surface-high); display: flex; gap: 1rem; }
+
+    /* ── FORM ── */
+    .form-section { margin-bottom: 2.5rem; }
+    .section-label { font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ds-outline); margin-bottom: 1.25rem; display: block; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--ds-on-surface); margin-bottom: 0.5rem; }
+    .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--ds-surface-high); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.875rem; outline: none; transition: all 0.2s; }
+    .form-input:focus { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(84, 94, 118, 0.1); }
+
+    @media (max-width: 1024px) { .main-content { margin-left: 0; padding: 2rem; } #entryDrawer { width: 100%; right: -100%; } }
+</style>
+
+<body class="page-wrapper admin-layout">
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <div class="main-content">
+        <div class="archive-tag">Personnel Management</div>
+        <h1 class="archive-title">Employee Registry</h1>
+
+        <!-- Toolbar -->
+        <div class="archive-toolbar">
+            <form th:action="@{/admin/employees}" method="GET" class="toolbar-group">
+                <input type="text" name="lastName" id="archiveSearch" class="archive-input" placeholder="Search by Last Name..." th:value="${param.lastName}">
+                <select name="officeCode" id="officeFilter" class="archive-input" style="width: 160px;" onchange="this.form.submit()">
+                    <option value="">All Branches</option>
+                    <option th:each="off : ${offices}" 
+                            th:value="${off.officeCode}" 
+                            th:text="${off.city + ' (#' + off.officeCode + ')'}"
+                            th:selected="${#strings.equals(param.officeCode, off.officeCode)}">
+                    </option>
+                </select>
+                <select name="jobTitle" id="jobFilter" class="archive-input" style="width: 160px;" onchange="this.form.submit()">
+                    <option value="">All Designations</option>
+                    <option th:each="jt : ${jobTitles}" 
+                            th:value="${jt}" 
+                            th:text="${jt}" 
+                            th:selected="${#strings.equals(param.jobTitle, jt)}">
+                    </option>
+                </select>
+                <select name="managerId" id="managerFilter" class="archive-input" style="width: 160px;" onchange="this.form.submit()">
+                    <option value="">Reporting Line</option>
+                    <option th:each="m : ${managers}" 
+                            th:value="${m.employeeNumber}" 
+                            th:text="${m.firstName + ' ' + m.lastName}"
+                            th:selected="${#strings.equals(param.managerId, m.employeeNumber)}">
+                    </option>
+                </select>
+                <button type="submit" class="archive-btn-primary" style="padding: 0.625rem;"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+            <a th:href="@{/admin/employees(action='add')}" class="archive-btn-primary">
+                <i class="fa-solid fa-plus"></i> Add Employee
+            </a>
+        </div>
+        
+        <!-- Data Grid -->
+        <div class="archive-card">
+            <div id="loadingIndicator">Syncing Officer Records...</div>
+            <div class="table-responsive">
+                <table class="archive-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Officer Name</th>
+                            <th>Designation</th>
+                            <th>Extension</th>
+                            <th>Branch Location</th>
+                            <th style="text-align: right;">Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personnelArchiveBody">
+                        <tr th:each="e : ${employees}" th:onclick="|window.location.href='/admin/employees/${e.employeeNumber}'|">
+                            <td><span class="id-col" th:text="${e.employeeNumber}"></span></td>
+                            <td><span class="name-col">[[${e.firstName}]] [[${e.lastName}]]</span></td>
+                            <td style="font-style: italic; opacity: 0.7;" th:text="${e.jobTitle}"></td>
+                            <td style="font-family: monospace; font-weight: 600;" th:text="${e.extension}"></td>
+                            <td>[[${e.officeCity}]] <span style="opacity: 0.4; font-size: 0.7rem;">#[[${e.officeCode}]]</span></td>
+                            <td style="text-align: right;" onclick="event.stopPropagation()">
+                                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    <a th:href="@{/admin/employees(action='edit', editId=${e.employeeNumber})}" class="action-btn">
+                                        <i class="fa-solid fa-pen-nib fa-xs"></i>
+                                    </a>
+                                    <form th:action="@{'/admin/employees/delete/' + ${e.employeeNumber}}" method="POST" style="display: inline;">
+                                        <button type="submit" class="action-btn delete" onclick="return confirm('Decommission officer record?')">
+                                            <i class="fa-solid fa-trash-can fa-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDING DRAWER ── -->
+    <!-- ── SLIDING DRAWER ── -->
+    <div id="drawerOverlay" th:classappend="${action != null ? 'active' : ''}" onclick="window.location.href='/admin/employees'"></div>
+    <div id="entryDrawer" th:classappend="${action != null ? 'active' : ''}">
+        <div class="drawer-header"><h2 id="drawerTitle" class="drawer-title" style="font-family: var(--font-headline); color: var(--ds-primary-dark);" th:text="${action == 'edit' ? 'Update Personnel Info' : 'Onboard Officer'}">Onboard Officer</h2></div>
+        <div class="drawer-body">
+            <form id="entryForm" th:action="@{/admin/employees/save}" method="POST" th:object="${employeeForm}">
+                <div class="form-section">
+                    <span class="section-label">Identity & Registry</span>
+                    <div id="empNumGroup" class="form-group" th:style="${action == 'edit' ? 'display:none' : ''}">
+                        <label class="form-label">Registry ID</label>
+                        <input type="number" name="employeeNumber" class="form-input" placeholder="e.g., 2001" th:field="*{employeeNumber}" th:required="${action != 'edit'}">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="firstName" class="form-input" th:field="*{firstName}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="lastName" class="form-input" th:field="*{lastName}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <span class="section-label">Communication & Branch</span>
+                    <div class="form-group">
+                        <label class="form-label">Corporate Email</label>
+                        <input type="email" name="email" class="form-input" th:field="*{email}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Internal Extension (e.g. x5800)</label>
+                        <input type="text" name="extension" class="form-input" placeholder="x5800" pattern="^x[0-9]{4}$" th:field="*{extension}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Branch Assignment (Office)</label>
+                        <select name="officeCode" class="form-input" required>
+                            <option value="">Select Branch...</option>
+                            <option th:each="off : ${offices}" 
+                                    th:value="${off.officeCode}" 
+                                    th:text="${off.city + ' (#' + off.officeCode + ')'}"
+                                    th:selected="${employeeForm.officeCode != null && employeeForm.officeCode == off.officeCode}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <span class="section-label">Archival Hierarchy</span>
+                    <div class="form-group">
+                        <label class="form-label">Reporting To (Manager)</label>
+                        <select name="managerEmployeeNumber" class="form-input">
+                            <option value="">Autonomous / Select Manager...</option>
+                            <option th:each="m : ${managers}" 
+                                    th:value="${m.employeeNumber}" 
+                                    th:text="${m.firstName + ' ' + m.lastName}"
+                                    th:selected="${employeeForm.managerEmployeeNumber != null && employeeForm.managerEmployeeNumber == m.employeeNumber}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Job Designation</label>
+                        <input type="text" name="jobTitle" class="form-input" placeholder="e.g., VP Sales" th:field="*{jobTitle}" required>
+                    </div>
+                </div>
+                
+                <div class="drawer-footer">
+                    <button type="submit" class="archive-btn-primary" style="flex: 1;">Maintain Registry</button>
+                    <a href="/admin/employees" class="form-input" style="flex: 0.4; cursor: pointer; text-align: center; text-decoration: none; color: black; display: flex; align-items: center; justify-content: center;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

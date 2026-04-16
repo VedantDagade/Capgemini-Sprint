@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Product Details')}"></head>
+<body class="page-wrapper">
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1;">
+            
+            <a href="javascript:history.back()" class="btn btn-outline" style="margin-bottom: 2rem;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            
+            <div class="grid-2" style="background-color: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-sm);">
+                
+                <!-- Image Box -->
+                <div style="background-color: #F8FAFC; border-right: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; min-height: 400px; position: relative;">
+                    <i class="fa-solid fa-car fa-8x" style="color: var(--text-muted); opacity: 0.5;"></i>
+                    <span class="badge badge-info" style="position: absolute; top: 1.5rem; left: 1.5rem; font-family: monospace;">CODE: S10_1949</span>
+                </div>
+                
+                <!-- Details Box -->
+                <div style="padding: 3rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <h1 style="color: var(--primary); line-height: 1.2; margin: 0; font-size: 2.25rem;">1952 Alpine Renault 1300</h1>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-bottom: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+                        <span><i class="fa-solid fa-building"></i> Classic Metal Creations</span>
+                        <span><i class="fa-solid fa-ruler"></i> Scale: 1:10</span>
+                        <span><i class="fa-solid fa-tag"></i> Classic Cars</span>
+                    </div>
+                    
+                    <p style="color: var(--text-main); margin-bottom: 2rem; line-height: 1.8;">Turnable front wheels; steering function; detailed interior; detailed engine; opening hood; opening trunk; opening doors; and detailed chassis.</p>
+                    
+                    <div style="background-color: var(--bg-main); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span style="display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem;">Your Price (Buy Price)</span>
+                                <span style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">$98.58</span>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem;">Retail MSRP</span>
+                                <span style="font-size: 1.5rem; color: var(--text-muted); text-decoration: line-through;">$214.30</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form th:action="@{/user/orders/new}" method="GET" style="display: flex; gap: 1rem; align-items: flex-end;">
+                        <input type="hidden" name="productCode" value="S10_1949">
+                        <div class="form-group" style="margin: 0; width: 120px;">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" value="1" min="1" max="7305">
+                        </div>
+                        <div style="margin-bottom: 0.5rem; color: var(--status-success); font-size: 0.875rem; flex-grow: 1;">
+                            <i class="fa-solid fa-check-circle"></i> 7,305 in stock
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;"><i class="fa-solid fa-cart-plus"></i> Add to Order Request</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

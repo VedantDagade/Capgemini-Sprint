@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Office Profile')}"></head>
+
+<style>
+    :root {
+        --ds-primary-dark:      #1B263B;
+        --ds-secondary:         #415A77;
+        --ds-accent:            #778DA9;
+        --ds-surface:           #f8f9fa;
+        --ds-surface-high:      #e3e9ec;
+        --ds-surface-white:     #ffffff;
+        --ds-on-surface:        #2b3437;
+        --ds-outline:           #737c7f;
+        --font-headline: 'Newsreader', Georgia, serif;
+        --font-body: 'Manrope', 'Inter', sans-serif;
+        --radius-md: 8px;
+        --radius-sm: 4px;
+    }
+
+    body.admin-layout {
+        background-color: var(--ds-surface);
+        min-height: 100vh;
+        display: flex;
+    }
+
+    .main-content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 4rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #f1f4f6 100%);
+    }
+
+    /* ── HERO SECTION ── */
+    .profile-tag {
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .profile-tag::after {
+        content: '';
+        width: 3rem;
+        height: 1px;
+        background: #ced4da;
+    }
+    .profile-title {
+        font-family: var(--font-headline);
+        font-size: 2.75rem;
+        font-weight: 400;
+        color: var(--ds-primary-dark);
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+    }
+    .profile-meta {
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        color: var(--ds-secondary);
+        font-weight: 600;
+        margin-bottom: 3rem;
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    /* ── INFO GRID ── */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+    .info-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--ds-surface-high);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .info-label {
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ds-outline);
+        margin-bottom: 0.75rem;
+    }
+    .info-value {
+        font-family: var(--font-body);
+        font-size: 0.9375rem;
+        color: var(--ds-on-surface);
+        font-weight: 500;
+    }
+
+    /* ── ACTIVITY HUB ── */
+    .activity-hub {
+        background: #fff;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--ds-surface-high);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+        overflow: hidden;
+    }
+    .tabs-header {
+        background: var(--ds-surface);
+        border-bottom: 1px solid var(--ds-surface-high);
+        padding: 0 2rem;
+        display: flex;
+    }
+    .tab-input { display: none; }
+    .tab-label {
+        padding: 1.25rem 2rem;
+        font-family: var(--font-headline);
+        font-size: 1.125rem;
+        color: var(--ds-outline);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-block;
+    }
+    .tab-label:hover { color: var(--ds-secondary); }
+    .tab-panel {
+        display: none;
+        padding: 2rem;
+    }
+    
+    #tab-roster:checked ~ .main-content .activity-hub #rosterTab {
+        display: block;
+    }
+    #tab-roster:checked ~ .main-content .activity-hub label[for="tab-roster"] {
+        color: var(--ds-primary-dark);
+        border-bottom-color: var(--ds-primary-dark);
+    }
+
+    /* ── TABLES ── */
+    .registry-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-body);
+    }
+    .registry-table th {
+        text-align: left;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--ds-outline);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 1rem;
+        border-bottom: 1px solid var(--ds-surface-high);
+    }
+    .registry-table td {
+        padding: 1rem;
+        font-size: 0.875rem;
+        color: var(--ds-on-surface);
+        border-bottom: 1px solid var(--ds-surface-low);
+    }
+    
+    .id-tag { font-family: 'Newsreader', serif; font-weight: 600; font-size: 1rem; color: var(--ds-primary-dark); }
+
+    @media (max-width: 1024px) {
+        .main-content { margin-left: 0; padding: 2rem; }
+        .info-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<body class="page-wrapper admin-layout">
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <!-- Tab State -->
+    <input type="radio" id="tab-roster" name="tabs" class="tab-input" checked>
+
+    <div class="main-content">
+        <a th:href="@{/admin/offices}" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--ds-secondary); font-size: 0.8125rem; font-weight: 600; margin-bottom: 2rem;">
+            <i class="fa-solid fa-arrow-left"></i> Return to Registry
+        </a>
+
+        <div class="profile-tag" th:text="${office.territory + ' Region'}">Corporate Branch</div>
+        <h1 id="officeCity" class="profile-title" th:text="${office.city + ' Office'}">Loading Branch...</h1>
+        <div class="profile-meta">
+            <span>Branch Code: <span th:text="${office.officeCode}"></span></span>
+            <span id="officeStateCountry" style="font-style: italic; opacity: 0.7;" th:text="${(office.state != null ? office.state + ', ' : '') + office.country}">...</span>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-label">Address Logistics</div>
+                <div id="addressLine1" class="info-value" th:text="${office.addressLine1}">...</div>
+                <div id="addressLine2" style="font-size: 0.8125rem; color: var(--ds-outline); margin-top: 0.25rem;" th:text="${office.addressLine2 != null ? office.addressLine2 : ''}"></div>
+                <div id="postalCode" style="font-size: 0.8125rem; color: var(--ds-outline); margin-top: 0.25rem;" th:text="${office.postalCode}"></div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Communication</div>
+                <div id="officePhone" class="info-value" th:text="${office.phone}">...</div>
+                <div style="font-size: 0.8125rem; color: var(--ds-outline); margin-top: 0.25rem;">Main Switchboard</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Regional Information</div>
+                <div id="officeTerritory" class="info-value" th:text="${office.territory}">...</div>
+                <div id="officeCountry" style="font-size: 0.8125rem; color: var(--ds-outline); margin-top: 0.25rem;" th:text="${office.country}"></div>
+            </div>
+        </div>
+        
+        <!-- Tab Hub -->
+        <div class="activity-hub">
+            <div class="tabs-header">
+                <label for="tab-roster" class="tab-label">Branch Roster</label>
+            </div>
+
+            <!-- Roster Tab -->
+            <div id="rosterTab" class="tab-panel">
+                <div class="table-responsive">
+                    <table class="registry-table">
+                        <thead>
+                            <tr>
+                                <th>Officer #</th>
+                                <th>Name</th>
+                                <th>Designation</th>
+                                <th>Direct Extension</th>
+                                <th style="text-align: right;">Registry View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="emp : ${employees}">
+                                <td><span class="id-tag" th:text="${'#' + emp.employeeNumber}"></span></td>
+                                <td><span style="font-weight: 600;" th:text="${emp.firstName + ' ' + emp.lastName}"></span></td>
+                                <td th:text="${emp.jobTitle}"></td>
+                                <td th:text="${emp.extension}"></td>
+                                <td style="text-align: right;"><a th:href="@{'/admin/employees/' + ${emp.employeeNumber}}" style="color: var(--ds-secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">View Officer</a></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(employees)}">
+                                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--ds-outline);">No officers currently assigned to this branch.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <footer style="margin-top: 4rem; text-align: center; border-top: 1px solid var(--ds-surface-high); padding-top: 2rem;">
+            <p style="font-size: 0.75rem; color: var(--ds-outline); letter-spacing: 0.05em;">ClassicModels Corporate Archive &copy; 2026</p>
+        </footer>
+    </div>
+
+</body>
+</html>

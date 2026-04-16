@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Orders')}"></head>
+<body class="page-wrapper admin-layout">
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <h1 style="margin: 0;"><i class="fa-solid fa-boxes-stacked"></i> Orders</h1>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create Order</button>
+        </div>
+        
+        <div class="card" style="margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem;">
+                <select class="form-control" style="width: 250px;">
+                    <option value="">Filter by Status</option>
+                    <option>Shipped</option>
+                    <option>In Process</option>
+                    <option>Cancelled</option>
+                    <option>On Hold</option>
+                    <option>Disputed</option>
+                    <option>Resolved</option>
+                </select>
+                <input type="text" class="form-control" placeholder="Search Order # or Customer #..." style="max-width: 250px;">
+            </div>
+        </div>
+        
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer #</th>
+                            <th>Order Date</th>
+                            <th>Req. Date</th>
+                            <th>Ship Date</th>
+                            <th>Status</th>
+                            <th>Comments</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;">10100</td>
+                            <td><a href="/admin/customers">363</a></td>
+                            <td>2023-01-06</td>
+                            <td>2023-01-13</td>
+                            <td>2023-01-10</td>
+                            <td><span class="badge badge-success">Shipped</span></td>
+                            <td style="color: var(--text-muted); font-size: 0.875rem; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Null</td>
+                            <td style="white-space: nowrap;">
+                                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">10101</td>
+                            <td><a href="/admin/customers">128</a></td>
+                            <td>2023-01-09</td>
+                            <td>2023-01-18</td>
+                            <td>2023-01-11</td>
+                            <td><span class="badge badge-success">Shipped</span></td>
+                            <td style="color: var(--text-muted); font-size: 0.875rem; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Check on availability.</td>
+                            <td style="white-space: nowrap;">
+                                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Shop Categories')}"></head>
+<body class="page-wrapper">
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                <h1 style="margin: 0;"><i class="fa-solid fa-list-ul"></i> Shop by Category (Product Lines)</h1>
+            </div>
+            
+            <div class="grid-3">
+                <!-- Category Card -->
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h2 style="color: var(--primary);">Classic Cars</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; flex-grow: 1; margin-bottom: 1.5rem;">Attention to detail sets our vintage car models apart from the rest. Every feature is carefully replicated.</p>
+                    <a href="/user/products?line=Classic Cars" class="btn btn-primary" style="width: 100%;">Browse Products &rarr;</a>
+                </div>
+                
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h2 style="color: var(--primary);">Motorcycles</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; flex-grow: 1; margin-bottom: 1.5rem;">Our motorcycles models range from vintage to modern sports bikes.</p>
+                    <a href="/user/products?line=Motorcycles" class="btn btn-primary" style="width: 100%;">Browse Products &rarr;</a>
+                </div>
+                
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h2 style="color: var(--primary);">Planes</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; flex-grow: 1; margin-bottom: 1.5rem;">Unique, diecast airplane and helicopter replicas suitable for collections.</p>
+                    <a href="/user/products?line=Planes" class="btn btn-primary" style="width: 100%;">Browse Products &rarr;</a>
+                </div>
+                
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h2 style="color: var(--primary);">Ships</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; flex-grow: 1; margin-bottom: 1.5rem;">Explore historic ship models with meticulous attention to detail.</p>
+                    <a href="/user/products?line=Ships" class="btn btn-primary" style="width: 100%;">Browse Products &rarr;</a>
+                </div>
+                
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h2 style="color: var(--primary);">Trains</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; flex-grow: 1; margin-bottom: 1.5rem;">Model trains from various eras and styles.</p>
+                    <a href="/user/products?line=Trains" class="btn btn-primary" style="width: 100%;">Browse Products &rarr;</a>
+                </div>
+                
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h2 style="color: var(--primary);">Vintage Cars</h2>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; flex-grow: 1; margin-bottom: 1.5rem;">These classic beauties will take you back in time and add elegance to any collection.</p>
+                    <a href="/user/products?line=Vintage Cars" class="btn btn-primary" style="width: 100%;">Browse Products &rarr;</a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

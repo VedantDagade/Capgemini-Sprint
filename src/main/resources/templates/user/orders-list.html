@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Orders')}"></head>
+<body class="page-wrapper">
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                <h1 style="margin: 0;"><i class="fa-solid fa-boxes-stacked"></i> My Order History</h1>
+                
+                <a href="/user/orders/new" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Order</a>
+            </div>
+            
+            <div class="card" style="margin-bottom: 2rem; padding: 1rem;">
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div style="font-weight: 600; color: var(--text-muted);">Filters:</div>
+                    <select class="form-control" style="width: 200px;">
+                        <option value="">All Statuses</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="In Process">In Process</option>
+                        <option value="On Hold">On Hold</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Disputed">Disputed</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order Number</th>
+                                <th>Order Date</th>
+                                <th>Required Date</th>
+                                <th>Shipped Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">10100</td>
+                                <td>2023-01-06</td>
+                                <td>2023-01-13</td>
+                                <td>2023-01-10</td>
+                                <td><span class="badge badge-success">Shipped</span></td>
+                                <td style="font-weight: 600; color: var(--primary);">$10,223.83</td>
+                                <td>
+                                    <a href="/user/orders/10100" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Details</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">10101</td>
+                                <td>2023-01-09</td>
+                                <td>2023-01-18</td>
+                                <td>2023-01-11</td>
+                                <td><span class="badge badge-success">Shipped</span></td>
+                                <td style="font-weight: 600; color: var(--primary);">$10,549.02</td>
+                                <td>
+                                    <a href="/user/orders/10101" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Details</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">10102</td>
+                                <td>2023-01-10</td>
+                                <td>2023-01-18</td>
+                                <td style="color: var(--text-muted); font-style: italic;">Pending</td>
+                                <td><span class="badge badge-info">In Process</span></td>
+                                <td style="font-weight: 600; color: var(--primary);">$5,494.78</td>
+                                <td>
+                                    <a href="/user/orders/10102" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Details</a>
+                                    <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem; margin-left: 0.25rem;">Cancel</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Offices')}"></head>
+
+<!-- We will reuse the same CSS style variables as customers and employees for a unified UI -->
+<style>
+    :root {
+        --ds-primary-dark:      #1B263B;
+        --ds-secondary:         #415A77;
+        --ds-accent:            #778DA9;
+        --ds-surface:           #f8f9fa;
+        --ds-surface-high:      #e3e9ec;
+        --ds-surface-white:     #ffffff;
+        --ds-on-surface:        #2b3437;
+        --ds-outline:           #737c7f;
+        --font-headline: 'Newsreader', Georgia, serif;
+        --font-body: 'Manrope', 'Inter', sans-serif;
+        --radius-md: 8px;
+        --radius-sm: 4px;
+    }
+
+    body.admin-layout {
+        background-color: var(--ds-surface);
+        min-height: 100vh;
+        display: flex;
+    }
+
+    .main-content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 4rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #f1f4f6 100%);
+    }
+
+    .archive-tag {
+        font-family: var(--font-body);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .archive-tag::after {
+        content: '';
+        width: 3rem;
+        height: 1px;
+        background: #ced4da;
+    }
+    .archive-title {
+        font-family: var(--font-headline);
+        font-size: 2.75rem;
+        font-weight: 400;
+        color: var(--ds-primary-dark);
+        letter-spacing: -0.02em;
+        margin-bottom: 3rem;
+    }
+
+    .archive-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        background: rgba(255,255,255,0.6);
+        padding: 0.75rem;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(227, 233, 236, 0.8);
+    }
+    .toolbar-group {
+        display: flex;
+        gap: 0.75rem;
+    }
+    
+    .archive-input {
+        padding: 0.625rem 1rem;
+        border: 1px solid var(--ds-surface-high);
+        border-radius: var(--radius-sm);
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        color: var(--ds-on-surface);
+        background: #fff;
+        min-width: 200px;
+        transition: border-color 0.2s;
+    }
+    .archive-input:focus { border-color: var(--ds-secondary); outline: none; }
+    
+    .archive-btn-primary {
+        background: var(--ds-primary-dark);
+        color: #fff;
+        border: none;
+        padding: 0.625rem 1.25rem;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 0.8125rem;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+    .archive-btn-primary:hover { background: var(--ds-secondary); color: #fff; }
+
+    /* ── TABLES ── */
+    .archive-card {
+        background: #fff;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--ds-surface-high);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+        overflow: hidden;
+    }
+    .archive-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-body);
+    }
+    .archive-table th {
+        text-align: left;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--ds-outline);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 1.25rem 1.5rem;
+        background: #fafafc;
+        border-bottom: 1px solid var(--ds-surface-high);
+    }
+    .archive-table td {
+        padding: 1.25rem 1.5rem;
+        font-size: 0.875rem;
+        color: var(--ds-on-surface);
+        border-bottom: 1px solid var(--ds-surface-low);
+    }
+    .archive-table tr { cursor: pointer; transition: background 0.2s; }
+    .archive-table tr:hover td { background: var(--ds-surface-low); }
+    
+    .id-col { font-family: 'Newsreader', serif; font-size: 1.125rem; font-weight: 500; color: var(--ds-primary-dark); }
+    .name-col { font-weight: 600; color: var(--ds-primary-dark); }
+    
+    .action-btn {
+        width: 32px; height: 32px;
+        border-radius: var(--radius-sm);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--ds-surface-high);
+        background: #fff;
+        color: var(--ds-outline);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    .action-btn:hover { border-color: var(--ds-primary); color: var(--ds-primary-dark); }
+    .action-btn.delete:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+
+    /* ── SLIDING DRAWER ── */
+    #drawerOverlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(27, 38, 59, 0.4); backdrop-filter: blur(4px);
+        z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s;
+    }
+    #drawerOverlay.active { opacity: 1; visibility: visible; }
+
+    #entryDrawer {
+        position: fixed; right: -480px; top: 0; width: 480px; height: 100%;
+        background: #fff; z-index: 1001; box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+        transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex; flex-direction: column;
+    }
+    #entryDrawer.active { right: 0; }
+
+    .drawer-header { padding: 2.5rem; border-bottom: 1px solid var(--ds-surface-high); }
+    .drawer-title { font-family: var(--font-headline); font-size: 1.75rem; color: var(--ds-primary-dark); margin: 0; }
+    
+    .drawer-body { flex: 1; overflow-y: auto; padding: 2.5rem; }
+    .drawer-footer { padding: 2rem 2.5rem; border-top: 1px solid var(--ds-surface-high); display: flex; gap: 1rem; }
+
+    /* Form within Drawer */
+    .form-section { margin-bottom: 2.5rem; }
+    .section-label {
+        font-family: var(--font-body); font-size: 0.625rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.1em; color: var(--ds-outline); margin-bottom: 1rem;
+    }
+    .input-group { margin-bottom: 1.25rem; }
+    .input-group label {
+        display: block; font-family: var(--font-body); font-size: 0.8125rem;
+        font-weight: 600; color: var(--ds-on-surface); margin-bottom: 0.5rem;
+    }
+    .drawer-input {
+        width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--ds-surface-high);
+        border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.875rem;
+        color: var(--ds-primary-dark); background: #fafafc; transition: border 0.2s, background 0.2s;
+    }
+    .drawer-input:focus { background: #fff; border-color: var(--ds-secondary); outline: none; }
+</style>
+
+<body class="page-wrapper admin-layout">
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <div class="main-content">
+        <div class="archive-tag">Corporate Infrastructure</div>
+        <h1 class="archive-title">Offices Registry</h1>
+
+        <!-- Toolbar -->
+        <div class="archive-toolbar">
+            <form th:action="@{/admin/offices}" method="GET" class="toolbar-group">
+                <input type="text" name="city" id="archiveSearch" class="archive-input" placeholder="Search by City..." th:value="${param.city}">
+                <select name="territory" id="territoryFilter" class="archive-input" style="width: 160px;" onchange="this.form.submit()">
+                    <option value="">All Regions</option>
+                    <option th:each="t : ${territories}" 
+                            th:value="${t}" 
+                            th:text="${t}"
+                            th:selected="${#strings.equals(param.territory, t)}">
+                    </option>
+                </select>
+                <select name="country" id="countryFilter" class="archive-input" style="width: 160px;" onchange="this.form.submit()">
+                    <option value="">All Countries</option>
+                    <option th:each="c : ${countries}" 
+                            th:value="${c}" 
+                            th:text="${c}"
+                            th:selected="${#strings.equals(param.country, c)}">
+                    </option>
+                </select>
+                <button type="submit" class="archive-btn-primary" style="padding: 0.625rem;"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+            <a th:href="@{/admin/offices(action='add')}" class="archive-btn-primary">
+                <i class="fa-solid fa-plus"></i> Register Branch
+            </a>
+        </div>
+        
+        <!-- Alerts -->
+        <div th:if="${message}" class="alert" style="background:#e6f4ea; color:#1e8e3e; padding:1rem; border-radius:4px; margin-bottom:1rem;" th:text="${message}"></div>
+        <div th:if="${error}" class="alert" style="background:#fce8e6; color:#d93025; padding:1rem; border-radius:4px; margin-bottom:1rem;" th:text="${error}"></div>
+
+        <!-- Data Grid -->
+        <div class="archive-card">
+            <div class="table-responsive">
+                <table class="archive-table">
+                    <thead>
+                        <tr>
+                            <th>Branch ID</th>
+                            <th>City</th>
+                            <th>State / Country</th>
+                            <th>Territory</th>
+                            <th>Contact</th>
+                            <th style="min-width: 100px; text-align: right;">Registry Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="off : ${offices}">
+                            <!-- Note: clicking anywhere else goes to office-detail -->
+                            <td onclick="window.location.href=this.getAttribute('data-href')" th:data-href="@{'/admin/offices/' + ${off.officeCode}}"><span class="id-col" th:text="${off.officeCode}"></span></td>
+                            <td onclick="window.location.href=this.getAttribute('data-href')" th:data-href="@{'/admin/offices/' + ${off.officeCode}}"><span class="name-col" th:text="${off.city}"></span></td>
+                            <td onclick="window.location.href=this.getAttribute('data-href')" th:data-href="@{'/admin/offices/' + ${off.officeCode}}" th:text="${(off.state != null ? off.state + ', ' : '') + off.country}"></td>
+                            <td onclick="window.location.href=this.getAttribute('data-href')" th:data-href="@{'/admin/offices/' + ${off.officeCode}}" th:text="${off.territory}"></td>
+                            <td onclick="window.location.href=this.getAttribute('data-href')" th:data-href="@{'/admin/offices/' + ${off.officeCode}}" th:text="${off.phone}"></td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    <a th:href="@{/admin/offices(action='edit', editCode=${off.officeCode})}" class="action-btn">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <form th:action="@{'/admin/offices/delete/' + ${off.officeCode}}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to completely erase this branch record?');">
+                                        <button type="submit" class="action-btn delete"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(offices)}">
+                            <td colspan="6" style="text-align: center; padding: 3rem; color: var(--ds-outline);">No branches found matching your search criteria.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer style="margin-top: 4rem; text-align: center;">
+            <p style="font-size: 0.75rem; color: var(--ds-outline); letter-spacing: 0.05em;">ClassicModels Corporate Archive &copy; 2026</p>
+        </footer>
+    </div>
+
+    <!-- Sliding Drawer Overlay -->
+    <div id="drawerOverlay" th:classappend="${action} ? 'active' : ''" onclick="closeDrawer()"></div>
+    
+    <!-- Entry Drawer UI -->
+    <div id="entryDrawer" th:classappend="${action} ? 'active' : ''">
+        <div class="drawer-header">
+            <h2 class="drawer-title" th:text="${action == 'edit'} ? 'Edit Branch' : 'Register New Branch'"></h2>
+        </div>
+        
+        <form id="officeForm" th:action="@{/admin/offices/save}" method="POST" th:object="${officeForm}" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+            <div class="drawer-body">
+                <div class="form-section">
+                    <div class="section-label">Core Identifiers</div>
+                    
+                    <div class="input-group">
+                        <label for="officeCode">Branch Code *</label>
+                        <input type="text" id="officeCode" th:field="*{officeCode}" class="drawer-input" required 
+                               th:readonly="${action == 'edit'}" placeholder="e.g. 1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="city">City Name *</label>
+                        <input type="text" id="city" th:field="*{city}" class="drawer-input" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Location Information</div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="input-group">
+                            <label for="country">Country *</label>
+                            <input type="text" id="country" th:field="*{country}" class="drawer-input" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="state">State / Province</label>
+                            <input type="text" id="state" th:field="*{state}" class="drawer-input">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="input-group">
+                            <label for="territory">Territory *</label>
+                            <input type="text" id="territory" th:field="*{territory}" class="drawer-input" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="postalCode">Postal Code *</label>
+                            <input type="text" id="postalCode" th:field="*{postalCode}" class="drawer-input" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="addressLine1">Address Line 1 *</label>
+                        <input type="text" id="addressLine1" th:field="*{addressLine1}" class="drawer-input" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="addressLine2">Address Line 2</label>
+                        <input type="text" id="addressLine2" th:field="*{addressLine2}" class="drawer-input">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-label">Contact Details</div>
+                    <div class="input-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="text" id="phone" th:field="*{phone}" class="drawer-input" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="drawer-footer">
+                <button type="button" class="archive-btn-primary" style="background:#fff; color:var(--ds-on-surface); border:1px solid var(--ds-surface-high);" onclick="closeDrawer()">Cancel</button>
+                <button type="submit" class="archive-btn-primary" style="flex:1; justify-content:center;">Commit to Registry</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function closeDrawer() {
+            window.location.href = '/admin/offices';
+        }
+    </script>
+</body>
+</html>

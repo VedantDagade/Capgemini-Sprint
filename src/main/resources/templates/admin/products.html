@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Products')}"></head>
+<body class="page-wrapper admin-layout">
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <h1 style="margin: 0;"><i class="fa-solid fa-box-open"></i> Products</h1>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Product</button>
+        </div>
+        
+        <div class="card" style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 1rem;">
+                    <select class="form-control" style="width: 250px;">
+                        <option value="">Filter by Product Line</option>
+                        <option>Classic Cars</option>
+                        <option>Motorcycles</option>
+                        <option>Planes</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--status-warning);">
+                        <input type="checkbox" style="width: 1.25rem; height: 1.25rem;"> Show Low Stock Items Only (< 50)
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Line</th>
+                            <th>Vendor</th>
+                            <th>Scale</th>
+                            <th>Buy Price</th>
+                            <th>MSRP</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600; font-family: monospace;">S10_1678</td>
+                            <td style="font-weight: 500;">1969 Harley Davidson Ultimate Chopper</td>
+                            <td>Motorcycles</td>
+                            <td>Min Lin Diecast</td>
+                            <td>1:10</td>
+                            <td>$48.81</td>
+                            <td>$95.70</td>
+                            <td style="background-color: #FEF3C7; font-weight: 600; color: #92400E; text-align: center;">79</td>
+                            <td style="white-space: nowrap;">
+                                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; font-family: monospace;">S10_1949</td>
+                            <td style="font-weight: 500;">1952 Alpine Renault 1300</td>
+                            <td>Classic Cars</td>
+                            <td>Classic Metal Creations</td>
+                            <td>1:10</td>
+                            <td>$98.58</td>
+                            <td>$214.30</td>
+                            <td style="text-align: center;">7305</td>
+                            <td style="white-space: nowrap;">
+                                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

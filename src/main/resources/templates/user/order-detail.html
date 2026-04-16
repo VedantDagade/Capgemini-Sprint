@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Order Detail')}"></head>
+<body class="page-wrapper">
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1; max-width: 1000px;">
+            
+            <a href="/user/orders" class="btn btn-outline" style="margin-bottom: 2rem;"><i class="fa-solid fa-arrow-left"></i> Back to Orders</a>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                <div>
+                    <h1 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-box-open"></i> Order #10100</h1>
+                    <div style="color: var(--text-muted);">Placed on Jan 06, 2023</div>
+                </div>
+                <div>
+                    <span class="badge badge-success" style="font-size: 1rem; padding: 0.5rem 1rem;">Shipped</span>
+                </div>
+            </div>
+            
+            <div class="grid-2" style="margin-bottom: 2rem;">
+                <!-- Dates & Info Card -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary-light);">Order Status</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-muted); font-weight: 500;">Required Date:</span>
+                        <span>Jan 13, 2023</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-muted); font-weight: 500;">Shipped Date:</span>
+                        <span>Jan 10, 2023</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-muted); font-weight: 500;">Tracking:</span>
+                        <a href="#" style="font-weight: 600;">#TRK-902384</a>
+                    </div>
+                </div>
+                
+                <!-- Comments Card -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color: var(--primary-light);">Comments & Notes</h3>
+                    <p style="color: var(--text-muted); font-style: italic;">No special comments provided for this order.</p>
+                </div>
+            </div>
+            
+            <!-- Line Items -->
+            <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 2rem;">
+                <div style="padding: 1.5rem; background-color: rgba(26,43,74,0.03); border-bottom: 1px solid var(--border-color);">
+                    <h3 style="margin: 0; color: var(--primary-light);">Line Items</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Item Code</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price Each</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color: var(--text-muted);">1</td>
+                                <td style="font-family: monospace; color: var(--primary); font-weight: 600;">S18_1749</td>
+                                <td>1917 Grand Touring Sedan</td>
+                                <td>30</td>
+                                <td>$136.00</td>
+                                <td style="font-weight: 600;">$4,080.00</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--text-muted);">2</td>
+                                <td style="font-family: monospace; color: var(--primary); font-weight: 600;">S18_2248</td>
+                                <td>1911 Ford Town Car</td>
+                                <td>50</td>
+                                <td>$55.09</td>
+                                <td style="font-weight: 600;">$2,754.50</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--text-muted);">3</td>
+                                <td style="font-family: monospace; color: var(--primary); font-weight: 600;">S18_4409</td>
+                                <td>1932 Alfa Romeo 8C2300 Spider Sport</td>
+                                <td>22</td>
+                                <td>$75.46</td>
+                                <td style="font-weight: 600;">$1,660.12</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--text-muted);">4</td>
+                                <td style="font-family: monospace; color: var(--primary); font-weight: 600;">S24_3969</td>
+                                <td>1936 Mercedes Benz 500k Roadster</td>
+                                <td>49</td>
+                                <td>$35.29</td>
+                                <td style="font-weight: 600;">$1,729.21</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4"></td>
+                                <td style="font-weight: 700; text-align: right;">Total:</td>
+                                <td style="font-weight: 700; font-size: 1.25rem; color: var(--primary);">$10,223.83</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

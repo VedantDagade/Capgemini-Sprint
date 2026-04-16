@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Payment History')}"></head>
+<body class="page-wrapper">
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                <h1 style="margin: 0;"><i class="fa-solid fa-file-invoice-dollar"></i> My Payment History</h1>
+                
+                <a href="/user/payments/new" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Make a Payment</a>
+            </div>
+            
+            <div class="card" style="margin-bottom: 2rem; padding: 1.5rem; background-color: var(--primary-light); color: white;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: rgba(255,255,255,0.8); font-weight: 500; margin-bottom: 0.5rem; font-size: 1.1rem;">Total Amount Paid to Date</h3>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">$142,050.00</div>
+                    </div>
+                    <i class="fa-solid fa-wallet fa-4x" style="color: rgba(255,255,255,0.1);"></i>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Check Number</th>
+                                <th>Payment Date</th>
+                                <th>Amount</th>
+                                <th style="text-align: right;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600; font-family: monospace; color: var(--primary);">HQ336336</td>
+                                <td>2004-10-19</td>
+                                <td style="font-weight: 600; color: var(--status-success);">$6,066.78</td>
+                                <td style="text-align: right;"><span class="badge badge-success">Cleared</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600; font-family: monospace; color: var(--primary);">JM555205</td>
+                                <td>2003-06-05</td>
+                                <td style="font-weight: 600; color: var(--status-success);">$14,571.44</td>
+                                <td style="text-align: right;"><span class="badge badge-success">Cleared</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600; font-family: monospace; color: var(--primary);">OM314933</td>
+                                <td>2004-12-18</td>
+                                <td style="font-weight: 600; color: var(--status-success);">$1,676.14</td>
+                                <td style="text-align: right;"><span class="badge badge-success">Cleared</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

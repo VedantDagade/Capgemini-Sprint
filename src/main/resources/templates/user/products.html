@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Products')}"></head>
+<body class="page-wrapper">
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div style="background-color: #F8FAFC; border-bottom: 1px solid var(--border-color); padding: 1rem 2rem;">
+            <div class="container" style="display: flex; gap: 0.5rem; font-size: 0.875rem;">
+                <a href="/user/home" style="color: var(--text-muted);">Home</a>
+                <span style="color: var(--text-muted);">/</span>
+                <a href="/user/categories" style="color: var(--text-muted);">Categories</a>
+                <span style="color: var(--text-muted);">/</span>
+                <span style="font-weight: 600; color: var(--primary);">Classic Cars</span>
+            </div>
+        </div>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 style="margin: 0;">Classic Cars <span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">(38 Items)</span></h1>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" class="form-control" placeholder="Search products..." style="width: 250px;">
+                    <select class="form-control" style="width: 150px;">
+                        <option>Sort by: Name A-Z</option>
+                        <option>Sort by: Price High-Low</option>
+                        <option>Sort by: Price Low-High</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid-4">
+                
+                <!-- Product Card 1 -->
+                <div class="card" style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                    <div style="height: 150px; background-color: var(--border-color); display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-car fa-3x" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div style="padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span class="badge badge-success">In Stock (7305)</span>
+                        </div>
+                        <h3 style="font-size: 1.1rem; line-height: 1.3; margin-bottom: 0.25rem;">1952 Alpine Renault 1300</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Vendor: Classic Metal Creations</p>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: auto; margin-bottom: 1rem;">$214.30 <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; text-decoration: line-through;">$250.00</span></div>
+                        <a href="/user/products/S10_1949" class="btn btn-outline" style="width: 100%;">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Product Card 2 -->
+                <div class="card" style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                    <div style="height: 150px; background-color: var(--border-color); display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-car fa-3x" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div style="padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span class="badge badge-warning">Low Stock (5)</span>
+                        </div>
+                        <h3 style="font-size: 1.1rem; line-height: 1.3; margin-bottom: 0.25rem;">1969 Harley Davidson Ultimate Chopper</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Vendor: Min Lin Diecast</p>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: auto; margin-bottom: 1rem;">$95.70 <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; text-decoration: line-through;">MSRP $110.00</span></div>
+                        <a href="/user/products/S10_1678" class="btn btn-outline" style="width: 100%;">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="card" style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                    <div style="height: 150px; background-color: var(--border-color); display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-car fa-3x" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div style="padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span class="badge badge-success">In Stock (3252)</span>
+                        </div>
+                        <h3 style="font-size: 1.1rem; line-height: 1.3; margin-bottom: 0.25rem;">1996 Moto Guzzi 1100i</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Vendor: Highway 66 Mini Classics</p>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: auto; margin-bottom: 1rem;">$118.94 <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; text-decoration: line-through;">MSRP $140.00</span></div>
+                        <a href="/user/products/S10_2016" class="btn btn-outline" style="width: 100%;">View Details</a>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${name})}"></head>
+
+<style>
+    /* ============================================================
+       STITCH "THE DIGITAL ATELIER" DESIGN SYSTEM - TEAM DETAIL
+       ============================================================ */
+    :root {
+        --ds-primary:           #545e76;
+        --ds-primary-dim:       #48526a;
+        --ds-primary-dark:      #1B263B;
+        --ds-secondary:         #415A77;
+        --ds-tertiary:          #778DA9;
+        --ds-surface:           #f8f9fa;
+        --ds-surface-low:       #f1f4f6;
+        --ds-surface-high:      #e3e9ec;
+        --ds-surface-white:     #ffffff;
+        --ds-on-surface:        #2b3437;
+        --ds-on-surface-var:    #586064;
+        --ds-outline:           #737c7f;
+        --ds-outline-var:       #abb3b7;
+        --ds-primary-container: #d7e2ff;
+        --ds-on-primary:        #f7f7ff;
+        --font-headline: 'Newsreader', Georgia, serif;
+        --font-body: 'Manrope', 'Inter', sans-serif;
+        --radius-full: 9999px;
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --nav-height: 72px;
+    }
+
+    body {
+        background-color: var(--ds-surface);
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-body);
+        color: var(--ds-on-surface);
+        line-height: 1.6;
+    }
+
+    .cm-nav {
+        height: var(--nav-height);
+        background: rgba(248, 249, 250, 0.80);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(171, 179, 183, 0.25);
+        display: flex;
+        align-items: center;
+        padding: 0 4rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .cm-nav-back {
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--ds-primary-dark);
+        text-decoration: none;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: transform 0.2s;
+    }
+    .cm-nav-back:hover { transform: translateX(-4px); }
+
+    /* ── PROFILE HERO ── */
+    .cm-profile-hero {
+        background: linear-gradient(135deg, var(--ds-primary-dark) 0%, var(--ds-secondary) 100%);
+        padding: 6rem 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .cm-profile-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+        position: relative;
+        z-index: 1;
+    }
+    .cm-profile-image-container {
+        width: 280px;
+        height: 280px;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 4px solid rgba(255,255,255,0.15);
+        box-shadow: 0 32px 64px rgba(0,0,0,0.25);
+        background: var(--ds-surface-high);
+    }
+    .cm-profile-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .cm-profile-content {
+        color: #ffffff;
+    }
+    .cm-profile-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 1rem;
+    }
+    .cm-profile-name {
+        font-family: var(--font-headline);
+        font-size: 4rem;
+        font-weight: 400;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+    }
+    .cm-profile-role {
+        font-family: var(--font-body);
+        font-size: 1.25rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.8);
+        margin-bottom: 2rem;
+    }
+    .cm-profile-bio {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.8;
+        color: rgba(255,255,255,0.7);
+        max-width: 600px;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .cm-main {
+        max-width: 1200px;
+        margin: -4rem auto 6rem;
+        padding: 0 4rem;
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 3rem;
+    }
+
+    .cm-sidebar-card {
+        background: var(--ds-surface-white);
+        border-radius: var(--radius-md);
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: 1px solid var(--ds-surface-high);
+    }
+    .cm-card-tag {
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ds-outline);
+        margin-bottom: 1rem;
+        display: block;
+    }
+    .cm-card-title {
+        font-family: var(--font-headline);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--ds-primary-dark);
+    }
+    .cm-service-badge {
+        display: inline-flex;
+        padding: 0.5rem 1rem;
+        background: var(--ds-primary-container);
+        color: var(--ds-primary-dark);
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+    }
+
+    /* ── API REGISTRY ── */
+    .cm-api-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .cm-api-card {
+        background: var(--ds-surface-white);
+        border-radius: var(--radius-md);
+        padding: 1.5rem 2rem;
+        border: 1px solid var(--ds-surface-high);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cm-api-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(43, 52, 55, 0.06);
+    }
+    
+    .cm-api-method {
+        width: 80px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-align: center;
+        padding: 0.4rem 0;
+        border-radius: var(--radius-sm);
+        letter-spacing: 0.05em;
+    }
+    .method-get    { background: #e3f2fd; color: #1976d2; }
+    .method-post   { background: #e8f5e9; color: #388e3c; }
+    .method-put    { background: #fff3e0; color: #f57c00; }
+    .method-delete { background: #ffebee; color: #d32f2f; }
+
+    .cm-api-info { flex: 1; }
+    .cm-api-path {
+        font-family: 'Monaco', 'Consolas', monospace;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--ds-primary-dark);
+        margin-bottom: 0.25rem;
+    }
+    .cm-api-desc {
+        font-size: 0.8125rem;
+        color: var(--ds-on-surface-var);
+    }
+
+    @media (max-width: 1024px) {
+        .cm-main { grid-template-columns: 1fr; }
+        .cm-profile-name { font-size: 3rem; }
+    }
+    @media (max-width: 768px) {
+        .cm-profile-inner { flex-direction: column; text-align: center; gap: 2rem; }
+        .cm-profile-image-container { width: 220px; height: 220px; }
+        .cm-nav, .cm-profile-hero, .cm-main { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .cm-api-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+</style>
+
+<body>
+
+    <nav class="cm-nav">
+        <a href="/" class="cm-nav-back">
+            <i class="fa-solid fa-arrow-left"></i> Back to Archive
+        </a>
+    </nav>
+
+    <header class="cm-profile-hero">
+        <div class="cm-profile-inner">
+            <div class="cm-profile-image-container">
+                <img th:src="${image}" th:alt="${name}">
+            </div>
+            <div class="cm-profile-content">
+                <div class="cm-profile-label">Developer Profile</div>
+                <h1 class="cm-profile-name" th:text="${name}">Sumit Sonawane</h1>
+                <div class="cm-profile-role" th:text="${role}">Lead Backend Developer</div>
+                <p class="cm-profile-bio" th:text="${bio}">
+                    Architected the core business logic and database integration layers for the ClassicModels platform.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="cm-main">
+        <!-- Sidebar -->
+        <aside>
+            <div class="cm-sidebar-card">
+                <span class="cm-card-tag">Core Responsibility</span>
+                <h3 class="cm-card-title">Service Domain</h3>
+                <div class="cm-service-badge">
+                   <i class="fa-solid fa-layer-group"></i>&nbsp; <span th:text="${service}">Customer Service</span>
+                </div>
+                <p style="margin-top: 1.5rem; font-size: 0.8125rem; color: var(--ds-on-surface-var);">
+                    Managed the end-to-end implementation of this domain, including data persistence, validation, and RESTful exposure.
+                </p>
+            </div>
+        </aside>
+
+        <!-- API List -->
+        <section>
+            <div class="cm-section-header" style="margin-bottom: 2rem;">
+                <h2 class="cm-card-title" style="font-size: 1.75rem;">Endpoint Registry</h2>
+                <p style="font-size: 0.875rem; color: var(--ds-on-surface-var);">
+                    The following RESTful endpoints were developed and documented by this team member.
+                </p>
+            </div>
+            
+            <div class="cm-api-list">
+                <div th:each="api : ${endpoints}" class="cm-api-card">
+                    <div th:class="'cm-api-method method-' + ${#strings.toLowerCase(api.method)}" th:text="${api.method}">GET</div>
+                    <div class="cm-api-info">
+                        <div class="cm-api-path" th:text="${api.path}">/api/v1/customers</div>
+                        <div class="cm-api-desc" th:text="${api.desc}">Retrieve a list of all customers.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 4rem; text-align: center; border-top: 1px solid var(--ds-surface-high);">
+        <p style="font-size: 0.75rem; color: var(--ds-outline);">ClassicModels Enterprise Registry &copy; 2026</p>
+    </footer>
+
+</body>
+</html>

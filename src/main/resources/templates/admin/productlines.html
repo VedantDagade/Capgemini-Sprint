@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Product Lines')}"></head>
+<body class="page-wrapper admin-layout">
+    <th:block th:replace="~{fragments/navigation :: admin_sidebar}"></th:block>
+    
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <h1 style="margin: 0;"><i class="fa-solid fa-tags"></i> Product Lines (Categories)</h1>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Product Line</button>
+        </div>
+        
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Line Name (ID)</th>
+                            <th style="width: 50%;">Text Description</th>
+                            <th>Total Products</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600; color: var(--primary);">Classic Cars</td>
+                            <td style="color: var(--text-muted); font-size: 0.875rem;">Attention to detail sets our vintage car models apart from the rest. Every feature is carefully replicated.</td>
+                            <td><span class="badge badge-info" style="font-size: 0.875rem;">38 Items</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: var(--primary);">Motorcycles</td>
+                            <td style="color: var(--text-muted); font-size: 0.875rem;">Our motorcycles models range from vintage to modern sports bikes.</td>
+                            <td><span class="badge badge-info" style="font-size: 0.875rem;">13 Items</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn" style="background-color: var(--status-danger); color: white; padding: 0.25rem 0.5rem; font-size: 0.875rem;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

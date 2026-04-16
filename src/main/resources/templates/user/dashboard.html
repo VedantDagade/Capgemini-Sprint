@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('User Dashboard')}"></head>
+<body class="page-wrapper">
+    
+    <div class="main-content" style="padding: 0; display: flex; flex-direction: column;">
+        <th:block th:replace="~{fragments/navigation :: user_navbar}"></th:block>
+        
+        <div class="container" style="padding: 2rem 1.5rem; flex-grow: 1;">
+            <div style="background-color: var(--primary); color: white; padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem;">
+                <h1 style="color: var(--accent); margin-bottom: 0.5rem;">Welcome back, <span th:text="${customerName != null ? customerName : 'Atelier graphique'}">Company</span>!</h1>
+                <p>Manage your orders, payments, and view your remaining credit limit.</p>
+            </div>
+            
+            <div class="grid-3" style="margin-bottom: 3rem;">
+                <div class="card" style="border-left: 4px solid var(--status-info);">
+                    <h3 style="color: var(--text-muted); font-size: 1rem; margin-bottom: 0.5rem;">Total Orders Placed</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">24</div>
+                </div>
+                <div class="card" style="border-left: 4px solid var(--status-success);">
+                    <h3 style="color: var(--text-muted); font-size: 1rem; margin-bottom: 0.5rem;">Total Payments Made</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">$142,050</div>
+                </div>
+                <div class="card" style="border-left: 4px solid var(--accent);">
+                    <h3 style="color: var(--text-muted); font-size: 1rem; margin-bottom: 0.5rem;">Credit Limit Remaining</h3>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">$21,000</div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-tags"></i> Shop by Category</h2>
+                    <div class="grid-2">
+                        <a href="/user/products?line=Classic Cars" class="card" style="text-align: center; display: block; border: 1px solid var(--border-color); transition: border-color 0.2s;">
+                            <i class="fa-solid fa-car-side fa-3x" style="color: var(--primary); margin-bottom: 1rem;"></i>
+                            <h4>Classic Cars</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-muted);">View 38 vehicles</p>
+                        </a>
+                        <a href="/user/products?line=Motorcycles" class="card" style="text-align: center; display: block; border: 1px solid var(--border-color); transition: border-color 0.2s;">
+                            <i class="fa-solid fa-motorcycle fa-3x" style="color: var(--primary); margin-bottom: 1rem;"></i>
+                            <h4>Motorcycles</h4>
+                            <p style="font-size: 0.875rem; color: var(--text-muted);">View 13 vehicles</p>
+                        </a>
+                        <a href="/user/categories" class="btn btn-outline" style="grid-column: span 2;">View All Categories &rarr;</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0;"><i class="fa-solid fa-clock-rotate-left"></i> Recent Orders</h2>
+                        <a href="/user/orders" style="font-size: 0.875rem; font-weight: 600;">View all</a>
+                    </div>
+                    
+                    <div class="card" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="/user/orders/10100">10100</a></td>
+                                        <td>Jan 06, 2023</td>
+                                        <td><span class="badge badge-success">Shipped</span></td>
+                                        <td style="font-weight: 600;">$10,223</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="/user/orders/10101">10101</a></td>
+                                        <td>Feb 14, 2023</td>
+                                        <td><span class="badge badge-info">In Process</span></td>
+                                        <td style="font-weight: 600;">$5,400</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="/user/orders/10102">10102</a></td>
+                                        <td>Mar 01, 2023</td>
+                                        <td><span class="badge badge-warning">On Hold</span></td>
+                                        <td style="font-weight: 600;">$1,120</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
