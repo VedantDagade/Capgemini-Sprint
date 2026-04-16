@@ -64,4 +64,27 @@ public class OfficeService {
                         "Office not found with code: " + code));
         officeRepository.delete(existing);
     }
+
+    public List<OfficeDTO> getByCountry(String country) {
+        return officeRepository.findByCountry(country)
+                .stream().map(mapper::toOfficeDTO).toList();
+    }
+
+    public List<OfficeDTO> getByTerritory(String territory) {
+        return officeRepository.findByTerritory(territory)
+                .stream().map(mapper::toOfficeDTO).toList();
+    }
+
+    public List<OfficeDTO> searchByCity(String city) {
+        return officeRepository.findByCityContainingIgnoreCase(city)
+                .stream().map(mapper::toOfficeDTO).toList();
+    }
+
+    public List<String> getAllCountries() {
+        return officeRepository.findDistinctCountries();
+    }
+
+    public List<String> getAllTerritories() {
+        return officeRepository.findDistinctTerritories();
+    }
 }

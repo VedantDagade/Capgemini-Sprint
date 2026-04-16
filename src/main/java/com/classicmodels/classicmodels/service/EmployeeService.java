@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional  // THIS is what was missing
+@Transactional
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -109,12 +109,15 @@ public class EmployeeService {
                 .stream().map(mapper::toEmployeeDTO).toList();
     }
 
-    // PRD 3.9 — Get all customers managed by this employee as sales rep
     public List<CustomerDTO> getCustomersBySalesRep(Integer id) {
         employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Employee not found with id: " + id));
         return customerRepository.findBySalesRep_EmployeeNumber(id)
                 .stream().map(mapper::toCustomerDTO).toList();
+    }
+
+    public List<String> getAllJobTitles() {
+        return employeeRepository.findDistinctJobTitles();
     }
 }
