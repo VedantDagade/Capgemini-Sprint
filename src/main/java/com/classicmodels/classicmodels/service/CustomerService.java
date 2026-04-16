@@ -121,4 +121,12 @@ public class CustomerService {
         return paymentRepository.findByCustomer_CustomerNumber(id)
                 .stream().map(mapper::toPaymentDTO).toList();
     }
+
+    public List<String> getAllCountries() {
+        return customerRepository.findDistinctCountries();
+    }
+
+    public List<String> getAllCities() {
+        return customerRepository.findDistinctCities();
+    }
 }
