@@ -66,6 +66,16 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getByCity(city));
     }
 
+    @GetMapping("/countries")
+    public ResponseEntity<List<String>> getAllCountries() {
+        return ResponseEntity.ok(customerService.getAllCountries());
+    }
+
+    @GetMapping("/cities")
+    public ResponseEntity<List<String>> getAllCities() {
+        return ResponseEntity.ok(customerService.getAllCities());
+    }
+
     // PRD 3.8 — Get all orders for a specific customer
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<OrderDTO>> getOrdersByCustomer(@PathVariable Integer id) {

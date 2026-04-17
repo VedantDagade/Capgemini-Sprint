@@ -74,9 +74,15 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getByManager(managerId));
     }
 
+    @GetMapping("/job-titles")
+    public ResponseEntity<List<String>> getAllJobTitles() {
+        return ResponseEntity.ok(employeeService.getAllJobTitles());
+    }
+
     // PRD 3.9 — Get all customers managed by this employee as sales rep
     @GetMapping("/{id}/customers")
     public ResponseEntity<List<CustomerDTO>> getCustomersBySalesRep(@PathVariable Integer id) {
         return ResponseEntity.ok(employeeService.getCustomersBySalesRep(id));
     }
-}
+    
+}
